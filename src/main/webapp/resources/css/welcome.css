@@ -1,0 +1,132 @@
+x {
+    color: red;
+    font-size: 0.8em;
+}
+.sub-md-block {
+    position: relative;     
+    width: 100%;
+    padding: 20px;
+}
+.md-block {
+    position: relative;
+    width: 70%;
+    height: 500px;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 10px #0f0f0f;
+}
+.admin-md-block {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 10px #0f0f0f;
+}
+.order-header {
+    color: white;
+    font-family: Georgia;
+    font-weight: bold;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.order-field {
+    color: white;
+    font-family: "Times New Roman";
+    font-weight: bold;
+    font-size: 1.8em;
+}
+.order-value {
+    color: #f18500;
+    font-weight: bold;
+    font-size: 1.8em;
+    margin-left: 20px;
+}
+.new-order-form {
+    position: relative;
+    width: 650px;
+    height: 250px;
+}
+.registration-form {
+    position: relative;
+    width: 600px;
+    height: 500px;
+}
+.order-labels {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: white;
+    font-family: "Times New Roman";
+    font-weight: bold;
+    font-size: 1.8em;
+    margin-top: 5px;
+}
+.order-inputs {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #0f0f0f;
+    font-weight: bold;
+    padding-top: 10px;
+    margin-left: 10px;
+}
+input[type=radio] {
+    border: 0px;
+    height: 1.2em;
+    width: 1.2em;
+    margin-right: 10px;
+}
+
+.new-order-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    background-color: #3F0C1F;
+    border: 0;
+    width: 150px;
+}
+.new-order-button:hover {
+    background-color: #5F1C5F;
+}
+.order-address {
+    width: 350px;
+    color: #0f0f0f;
+    border-radius: 10px;
+    margin-bottom: 23px;
+    text-align: center;
+    font-style: italic;
+}
+
+.table-buttons {     
+    text-align: center;     
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    margin: 0;
+}
+.table-buttons:hover {
+    text-shadow: 0px 0px 5px #FFFFFF;
+}
+#orders-menu {
+    border-radius: 60px 0 0 0;      
+}
+#cars-menu {
+    border-radius: 0 60px 0 0;        
+}
+.table-button {
+    color: white;
+    background-color: #3F0C1F;
+    border: 0;
+}
+.table-button:hover {
+    background-color: #7F4C5F;
+}
+.add-form, .client-add-form, .driver-add-form, .admin-add-form, .car-add-form {
+    display: none;
+    color: black;
+}
