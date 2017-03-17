@@ -17,19 +17,19 @@ public class ClientInputsInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        logger.trace("on Registration Interceptor");
-//        boolean ok = true;
-//        if ( request.getParameter("from").isEmpty() ) ok=false;
-//        if ( request.getParameter("to").isEmpty() ) ok=false;
-//        if ( request.getParameter("pickup_time").isEmpty() ) ok=false;
-//        if ( request.getParameter("plan").isEmpty() ) ok=false;
-//        if (!ok) {
-//            request.setAttribute("notfilled",true);
-//
-//        }
-//
-//        return ok;
-        return true;
+        logger.trace("on Registration Interceptor");
+        boolean ok = true;
+        if ( request.getParameter("from").isEmpty() ) ok=false;
+        if ( request.getParameter("to").isEmpty() ) ok=false;
+        if ( request.getParameter("pickup_time").isEmpty() ) ok=false;
+        if ( request.getParameter("plan").isEmpty() ) ok=false;
+        if (!ok) {
+            request.setAttribute("notfilled",true);
+
+        }
+
+        return ok;
+
     }
 
 
