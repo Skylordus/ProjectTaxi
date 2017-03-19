@@ -1,9 +1,8 @@
-package com.yberdaliyev.controllers.filters;
+package com.yberdaliyev.controllers.filters.unused;
 
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
