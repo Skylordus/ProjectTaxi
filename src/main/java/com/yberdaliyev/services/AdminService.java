@@ -5,6 +5,8 @@ import com.yberdaliyev.models.daos.IDriverDAO;
 import com.yberdaliyev.models.pojos.Admin;
 import com.yberdaliyev.models.pojos.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -30,6 +32,7 @@ public class AdminService implements IAdminService {
         return admin;
     }
 
+    @Secured({"ROLE_ADMIN"})
     @Override
     public Admin generateAdmin(String id,
                                  String firstname,
@@ -49,6 +52,7 @@ public class AdminService implements IAdminService {
         return admin;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public boolean updateAdmin(String id,
                                 String firstname,
@@ -73,6 +77,7 @@ public class AdminService implements IAdminService {
         return adminDAO.insert(admin, getID);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public boolean delete(Long id) {
         if (adminDAO.deleteById(id)) {
@@ -81,6 +86,7 @@ public class AdminService implements IAdminService {
         return false;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public ArrayList<Admin> getAll() {
         return adminDAO.getAll();

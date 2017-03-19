@@ -1,6 +1,7 @@
 package com.yberdaliyev.models.forms;
 
 import com.yberdaliyev.common.validators.SpecialPasswordConstraint;
+import com.yberdaliyev.models.enums.USER_ROLES;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ import java.sql.Date;
 
 public class RegistrationForm {
     @NotNull
-    private String user_role;
+    private USER_ROLES user_role;
     @NotNull
     @Size(min=2, max=10)
     private String user_name;
@@ -44,7 +45,7 @@ public class RegistrationForm {
 
 
     public RegistrationForm() {}
-    public RegistrationForm(String user_role, String user_name, String user_surname, String user_patronymic, Date user_birthdate, String user_login, String user_password, String user_email,String special_password) {
+    public RegistrationForm(USER_ROLES user_role, String user_name, String user_surname, String user_patronymic, Date user_birthdate, String user_login, String user_password, String user_email,String special_password) {
         this.user_role = user_role;
         this.user_name = user_name;
         this.user_surname = user_surname;
@@ -65,11 +66,11 @@ public class RegistrationForm {
         this.special_password = special_password;
     }
 
-    public String getUser_role() {
+    public USER_ROLES getUser_role() {
         return user_role;
     }
 
-    public void setUser_role(String user_role) {
+    public void setUser_role(USER_ROLES user_role) {
         this.user_role = user_role;
     }
 

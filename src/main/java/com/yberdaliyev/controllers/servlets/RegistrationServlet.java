@@ -1,5 +1,6 @@
 package com.yberdaliyev.controllers.servlets;
 
+import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.forms.RegistrationForm;
 import com.yberdaliyev.services.IUserService;
 import org.apache.log4j.Logger;

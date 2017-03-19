@@ -1,6 +1,7 @@
 package com.yberdaliyev.services;
 
 import com.yberdaliyev.models.daos.IClientDAO;
+import com.yberdaliyev.models.entities.ClientEntity;
 import com.yberdaliyev.models.pojos.Client;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public Client generateClient(String id,
+    public ClientEntity generateClient(String id,
                                  String firstname,
                                  String lastname,
                                  String patronymic,
@@ -34,7 +35,7 @@ public class ClientService implements IClientService {
                                  String login,
                                  String email,
                                  String order) {
-        Client client = new Client();
+        ClientEntity client = new ClientEntity();
         client.setId(Long.parseLong(id));
         client.setFirstname(firstname);
         client.setLogin(login);
@@ -43,7 +44,7 @@ public class ClientService implements IClientService {
         client.setOrder(Long.parseLong(order));
         client.setDate_registered(Date.valueOf(date_registered));
         client.setBirthdate(Date.valueOf(birthdate));
-        client.setOrders_amount(Long.parseLong(orders_amount));
+        client.setOrders_amount(Integer.parseInt(orders_amount));
         client.setEmail(email);
         return client;
     }
@@ -74,7 +75,7 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public Long insert(Client client, boolean getID) {
+    public Long insert(ClientEntity client, boolean getID) {
         return clientDAO.insert(client, getID);
     }
 
@@ -87,8 +88,8 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public Client getClient(Long id) {
-        Client client = clientDAO.getById(id);
+    public ClientEntity getClient(Long id) {
+        ClientEntity client = clientDAO.getById(id);
         return client;
     }
 
@@ -97,7 +98,7 @@ public class ClientService implements IClientService {
         HashMap<Long,String> map = new HashMap<>();
         Iterator<Long> it = IDs.iterator();
         Long id;
-        Client client;
+        ClientEntity client;
         logger.warn(IDs);
         while (it.hasNext()) {
             id = it.next();
@@ -109,7 +110,7 @@ public class ClientService implements IClientService {
 
 
     @Override
-    public ArrayList<Client> getAll() {
+    public List<ClientEntity> getAll() {
         return clientDAO.getAll();
     }
 

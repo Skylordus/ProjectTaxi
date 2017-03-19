@@ -13,7 +13,7 @@ import java.sql.Date;
  */
 
 public interface IUserService {
-    void register(String user_role,
+    void register(USER_ROLES user_role,
                   String user_name,
                   String user_surname,
                   String user_patronymic,

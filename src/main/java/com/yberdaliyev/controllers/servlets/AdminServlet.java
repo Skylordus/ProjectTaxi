@@ -2,6 +2,7 @@ package com.yberdaliyev.controllers.servlets;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
 import com.sun.tracing.dtrace.ModuleAttributes;
+import com.yberdaliyev.models.entities.ClientEntity;
 import com.yberdaliyev.models.pojos.*;
 import com.yberdaliyev.services.*;
 import org.apache.log4j.Logger;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yerlan on 27.02.2017.
@@ -53,14 +55,14 @@ public class AdminServlet {
 //
 //    }
 
-    @Secured({"ROLE_ADMIN"})
+
     @RequestMapping(value = "/admin_account", method = RequestMethod.GET)
     public ModelAndView doGet() {
         logger.warn("on doGet AdminServlet");
         ModelAndView modelAndView = new ModelAndView("admin_account");
 
         ArrayList<Order> orders = orderService.getAll();
-        ArrayList<Client> clients = clientService.getAll();
+        List<ClientEntity> clients = clientService.getAll();
         ArrayList<Driver> drivers = driverService.getAll();
         ArrayList<Admin> admins = adminService.getAll();
         ArrayList<Car> cars = carService.getAll();
@@ -74,7 +76,7 @@ public class AdminServlet {
         return modelAndView;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @RequestMapping(value = "/admin_account", method = RequestMethod.POST)
     public ModelAndView tableOrders (@RequestParam(name = "type") String type,
                                @RequestParam(name = "id", required=false) String id,
@@ -131,7 +133,7 @@ public class AdminServlet {
         }
 
         ArrayList<Order> orders = orderService.getAll();
-        ArrayList<Client> clients = clientService.getAll();
+        List<ClientEntity> clients = clientService.getAll();
         ArrayList<Driver> drivers = driverService.getAll();
         ArrayList<Admin> admins = adminService.getAll();
         ArrayList<Car> cars = carService.getAll();
@@ -144,7 +146,7 @@ public class AdminServlet {
         return modelAndView;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @RequestMapping(value = "/admin_account/client", method = RequestMethod.POST)
     public ModelAndView tableClient(@RequestParam(name = "type") String type,
                                @RequestParam(name = "id", required=false) String id,
@@ -188,7 +190,7 @@ public class AdminServlet {
             }
         } else
         if (type.equals("add")) {
-            Client client = clientService.generateClient("0",
+            ClientEntity client = clientService.generateClient("0",
                     firstname,
                     lastname,
                     patronymic,
@@ -207,7 +209,7 @@ public class AdminServlet {
             }
         }
         ArrayList<Order> orders = orderService.getAll();
-        ArrayList<Client> clients = clientService.getAll();
+        List<ClientEntity> clients = clientService.getAll();
         ArrayList<Driver> drivers = driverService.getAll();
         ArrayList<Admin> admins = adminService.getAll();
         ArrayList<Car> cars = carService.getAll();
@@ -220,7 +222,7 @@ public class AdminServlet {
         return modelAndView;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @RequestMapping(value = "/admin_account/driver", method = RequestMethod.POST)
     public ModelAndView tableDriver(@RequestParam(name = "type") String type,
                                     @RequestParam(name = "id", required=false) String id,
@@ -283,7 +285,7 @@ public class AdminServlet {
             }
         }
         ArrayList<Order> orders = orderService.getAll();
-        ArrayList<Client> clients = clientService.getAll();
+        List<ClientEntity> clients = clientService.getAll();
         ArrayList<Driver> drivers = driverService.getAll();
         ArrayList<Admin> admins = adminService.getAll();
         ArrayList<Car> cars = carService.getAll();
@@ -296,7 +298,7 @@ public class AdminServlet {
         return modelAndView;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @RequestMapping(value = "/admin_account/admin", method = RequestMethod.POST)
     public ModelAndView tableAdmin(@RequestParam(name = "type") String type,
                                     @RequestParam(name = "id", required=false) String id,
@@ -350,7 +352,7 @@ public class AdminServlet {
             }
         }
         ArrayList<Order> orders = orderService.getAll();
-        ArrayList<Client> clients = clientService.getAll();
+        List<ClientEntity> clients = clientService.getAll();
         ArrayList<Driver> drivers = driverService.getAll();
         ArrayList<Admin> admins = adminService.getAll();
         ArrayList<Car> cars = carService.getAll();
@@ -363,7 +365,7 @@ public class AdminServlet {
         return modelAndView;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @RequestMapping(value = "/admin_account/car", method = RequestMethod.POST)
     public ModelAndView tableCar(@RequestParam(name = "type") String type,
                                    @RequestParam(name = "id", required=false) String id,
@@ -409,7 +411,7 @@ public class AdminServlet {
             }
         }
         ArrayList<Order> orders = orderService.getAll();
-        ArrayList<Client> clients = clientService.getAll();
+        List<ClientEntity> clients = clientService.getAll();
         ArrayList<Driver> drivers = driverService.getAll();
         ArrayList<Admin> admins = adminService.getAll();
         ArrayList<Car> cars = carService.getAll();

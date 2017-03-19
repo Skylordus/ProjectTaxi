@@ -44,7 +44,7 @@ public class ClientServlet {
         this.carService = carService;
     }
 
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+
     @RequestMapping(value = "/client_account", method = RequestMethod.POST)
     public ModelAndView doPost(HttpSession session,
                                @RequestParam(name = "type") String type,
@@ -78,7 +78,6 @@ public class ClientServlet {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/client_account", method = RequestMethod.GET)
     public ModelAndView doGet(HttpSession session) {
         logger.warn("on doGET client Servlet");

@@ -1,5 +1,6 @@
 package com.yberdaliyev.controllers.servlets;
 
+import com.yberdaliyev.models.entities.ClientEntity;
 import com.yberdaliyev.models.pojos.Car;
 import com.yberdaliyev.models.pojos.Client;
 import com.yberdaliyev.models.pojos.Driver;
@@ -55,7 +56,6 @@ public class DriverServlet {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_DRIVER')")
     @RequestMapping(value = "/driver_account", method = RequestMethod.POST)
     public ModelAndView doPost(HttpSession session,
                                @RequestParam(name="order_id") Long order_id,
@@ -112,7 +112,6 @@ public class DriverServlet {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_DRIVER')")
     @RequestMapping(value = "/driver_account", method = RequestMethod.GET)
     public ModelAndView doGet(HttpSession session)  {
         logger.warn("on doGet DriverServlet");
@@ -133,7 +132,7 @@ public class DriverServlet {
 
         if (showOrder) {
             modelAndView.addObject("your_order",order);
-            Client client = clientService.getClient(order.getClient());
+            ClientEntity client = clientService.getClient(order.getClient());
             String clientName = client.getFirstname()+" "+client.getPatronymic()+" "+client.getLastname();
             modelAndView.addObject("client",clientName);
             Car car = carService.getCar(driver.getCar());

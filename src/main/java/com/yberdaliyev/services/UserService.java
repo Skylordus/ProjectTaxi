@@ -3,6 +3,7 @@ package com.yberdaliyev.services;
 import com.yberdaliyev.common.exceptions.EmailExistsException;
 import com.yberdaliyev.common.exceptions.LoginExistsException;
 import com.yberdaliyev.models.daos.*;
+import com.yberdaliyev.models.entities.ClientEntity;
 import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.pojos.*;
 import org.apache.log4j.Logger;
@@ -12,6 +13,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
+
+import static com.yberdaliyev.models.enums.USER_ROLES.ROLE_ADMIN;
+import static com.yberdaliyev.models.enums.USER_ROLES.ROLE_CLIENT;
+import static com.yberdaliyev.models.enums.USER_ROLES.ROLE_DRIVER;
 
 /**
  * Created by Yerlan on 26.02.2017.
@@ -41,7 +46,7 @@ public class UserService implements IUserService {
         this.encoder = encoder;
     }
 
-    public void register(String user_role,
+    public void register(USER_ROLES user_role,
                          String user_name,
                          String user_surname,
                          String user_patronymic,
@@ -52,11 +57,11 @@ public class UserService implements IUserService {
 
         User user = null;
 
-        if (user_role.equals("client")) {
-            user = new Client();
-        } else if (user_role.equals("driver")) {
+        if (user_role.equals(ROLE_CLIENT)) {
+            user = new ClientEntity();
+        } else if (user_role.equals(ROLE_DRIVER)) {
             user = new Driver();
-        } else if (user_role.equals("admin")) {
+        } else if (user_role.equals(ROLE_ADMIN)) {
             user = new Admin();
         }
 
@@ -68,20 +73,21 @@ public class UserService implements IUserService {
         user.setPwd( encoder.encode(user_password) );
         user.setEmail( user_email );
 
-        if (user_role.equals("client")) {
-            Client client = (Client) user;
+        if (user_role.equals(ROLE_CLIENT)) {
+            ClientEntity client = (ClientEntity) user;
             client.setDate_registered(new Date(new java.util.Date().getTime()));
-            client.setOrders_amount((long)0);
+            client.setOrders_amount(0);
             IClientDAO.insert(client,false);
-        } else if (user_role.equals("driver")) {
+        } else if (user_role.equals(ROLE_DRIVER)) {
             Driver driver = (Driver) user;
             driver.setCar((long)0);
             driver.setExperience_years((long)0);
             IDriverDAO.insert(driver,false);
-        } else if (user_role.equals("admin")) {
+        } else if (user_role.equals(ROLE_ADMIN)) {
             Admin admin = (Admin) user;
             IAdminDAO.insert(admin, false);
         }
+
     }
 
     public User getUserByLoginAndRole(String login, USER_ROLES role) {
