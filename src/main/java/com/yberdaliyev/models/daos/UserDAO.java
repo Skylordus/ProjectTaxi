@@ -3,6 +3,7 @@ package com.yberdaliyev.models.daos;
 import com.yberdaliyev.models.connectors.Connector;
 import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.pojos.*;
+import com.yberdaliyev.services.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,8 +20,8 @@ import java.sql.SQLException;
 public class UserDAO implements IUserDAO {
     private static Logger logger = Logger.getLogger(UserDAO.class);
     private static final String SQL_INSERT_LOGIN = "INSERT INTO main.logins " +
-            "(login,pwd,type) "+
-            "values (?,?,?);";
+            "(login,pwd,role) "+
+            "values (?,?,?::main.user_role);";
     private static final String SQL_SELECT_LOGIN = "SELECT * FROM main.logins " +
                                                    "WHERE login=? AND pwd=?";
     private static final String SQL_SELECT_LOGIN_ONLY = "SELECT * FROM main.logins " +
@@ -33,10 +34,10 @@ public class UserDAO implements IUserDAO {
             prepS.setString(1,user.getLogin());
             prepS.setString(2,user.getPwd());
 
-            int type=1;
-            if (user instanceof Client) {type=2;} else
-            if (user instanceof Driver) {type=3;}
-            prepS.setInt(3,type);
+            USER_ROLES role = USER_ROLES.ROLE_ADMIN;
+            if (user instanceof Client) {role=USER_ROLES.ROLE_CLIENT;} else
+            if (user instanceof Driver) {role=USER_ROLES.ROLE_DRIVER;}
+            prepS.setString(3, role.toString());
 
             prepS.setString(4,user.getFirstname());
             prepS.setString(5,user.getLastname());

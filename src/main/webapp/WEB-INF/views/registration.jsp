@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="th" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +21,7 @@
 <script src="<c:url value="/resources/js/jquery-3.1.1.min.js"/>"></script>
 <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
 <script src="<c:url value="/resources/js/script.js"/>"></script>
-	
+
 	<header>
 		<nav id="header-nav" class="navbar navbar-default">
 			<div class="container">
@@ -50,42 +51,67 @@
 		<section class="row">
 			<div class="md-container col-xs-12">
 
-				<div class="md-block" style="height: 650px">
+				<div class="md-block" style="height: 750px">
 
 					<div class="sub-md-block">
 						<h1 class="order-header">Registration:</h1>
-						<h3 style="color: darkred; font-weight: bold; visibility: <%=request.getAttribute("unfilled")%>">Please fill out all required fields marked with *</h3>
-						<form class="registration-form" action="/registration" method="post">
+
+						<th:form class="registration-form" action="/registration" commandName="regForm" method="post">
 							<div class="order-labels">
-								<label for="user_login">Login:<x>*</x></label> <br>
-								<label for="user_password">Password:<x>*</x></label> <br>
-								<label for="user_name">Name:<x>*</x></label> <br>
-								<label for="user_surname">Surname:<x>*</x></label> <br>
-								<label for="user_patronymic">Patronymic:</label> <br>
-								<label for="user_birthdate">Birthdate:</label> <br>
-								<label for="user_email">Email:<x>*</x></label> <br>
+								<label class="reg-label" for="user_login">Login:<x>*</x></label> <br>
+								<label class="reg-label"for="user_password">Password:<x>*</x></label> <br>
+								<label class="reg-label" for="user_name">Name:<x>*</x></label> <br>
+								<label class="reg-label" for="user_surname">Surname:<x>*</x></label> <br>
+								<label class="reg-label" for="user_patronymic">Patronymic:</label> <br>
+								<label class="reg-label" for="user_birthdate">Birthdate:</label> <br>
+								<label class="reg-label" for="user_email">Email:<x>*</x></label> <br>
 								<hr style="width: 700px">
-								<label for="user_role">Account type:<x>*</x></label> <br>
-								<label for="account_password">Special password:</label> <br>
+								<label class="reg-label" for="user_role">Account type:<x>*</x></label> <br>
+								<label for="special_password">Special password:</label> <br>
 								<p style="color: red; font-size: 0.7em;">For account types other than client</p>
 							</div>
 							<div class="order-inputs">
-								<input class="order-address" style="margin-bottom: 20px; margin-top: 5px" type="text" name="user_login" id="user_login" placeholder="enter your login"> <br>
-								<input class="order-address" style="margin-bottom: 20px" type="password" name="user_password" id="user_password" placeholder="enter your password"> <br>
-								<input class="order-address" style="margin-bottom: 20px" type="text" name="user_name" id="user_name" placeholder="enter your name"> <br>
-								<input class="order-address" style="margin-bottom: 20px" type="text" name="user_surname" id="user_surname" placeholder="enter your surname"> <br>
-								<input class="order-address" style="margin-bottom: 20px" type="text" name="user_patronymic" id="user_patronymic" placeholder="enter your middle name"> <br>
-								<input class="order-address" style="margin-bottom: 20px" type="date" name="user_birthdate" id="user_birthdate" placeholder="enter birthdate, format yyyy-mm-dd"> <br>
-								<input class="order-address" style="margin-bottom: 20px" type="email" name="user_email" id="user_email" placeholder="enter your email address"> <br>
-								<div style="margin-top: 43px; margin-bottom: 18px; color: #f18500; font-weight: bold">
-									<input type="radio" name="user_role" id="user_role" checked="checked" value="client">Client
-									<input type="radio" name="user_role" value="driver">Driver
-									<input type="radio" name="user_role" value="admin">Administrator<br>
+								<div class="inputs-container">
+									<th:input path="user_login" cssClass="order-address" cssStyle="position: absolute; top: 0" type="text" placeholder="enter your login"/>
+									<th:errors path="user_login" cssClass="error"/>
 								</div>
-								<input class="order-address" type="password" name="account_password" id="account_password" placeholder="enter password given to you by administrator">
+								<div class="inputs-container">
+									<th:input path="user_password" cssClass="order-address" cssStyle="position: absolute; top: 0" type="password" placeholder="enter your password"/>
+									<th:errors path="user_password" cssClass="error"/>
+								</div>
+								<div class="inputs-container">
+									<th:input path="user_name" cssClass="order-address" cssStyle="position: absolute; top: 0" type="text" placeholder="enter your name"/>
+									<th:errors path="user_name" cssClass="error"/>
+								</div>
+								<div class="inputs-container">
+									<th:input path="user_surname" cssClass="order-address" cssStyle="position: absolute; top: 0" type="text" placeholder="enter your surname"/>
+									<th:errors path="user_surname" cssClass="error"/>
+								</div>
+								<div class="inputs-container">
+									<th:input path="user_patronymic" cssClass="order-address" cssStyle="position: absolute; top: 0" type="text" placeholder="enter your middle name"/>
+									<th:errors path="user_patronymic" cssClass="error"/>
+								</div>
+								<div class="inputs-container">
+									<th:input path="user_birthdate" cssClass="order-address" cssStyle="position: absolute; top: 0" type="date" placeholder="date of birth"/>
+									<th:errors path="user_birthdate" cssStyle="width: 100px; height: 15px; overflow: hidden;" cssClass="error"/>
+								</div>
+								<div class="inputs-container">
+									<th:input path="user_email" cssClass="order-address" cssStyle="position: absolute; top: 0" type="email" placeholder="your email"/>
+									<th:errors path="user_email" cssClass="error"/>
+								</div>
+								<div style="margin-top: 43px; margin-bottom: 18px; color: #f18500; font-weight: bold">
+									<th:radiobutton path="user_role" checked="checked" value="ROLE_CLIENT"/>Client
+									<th:radiobutton path="user_role" value="ROLE_DRIVER"/>Driver
+									<th:radiobutton path="user_role" value="ROLE_ADMIN"/>Administrator<br>
+								</div>
+								<div class="inputs-container">
+									<th:input path="special_password" cssClass="order-address" cssStyle="position: absolute; top: 0" type="password" placeholder="enter special password"/>
+									<th:errors path="special_password" cssClass="error"/>
+								</div>
+
 							</div>
-							<input class="new-order-button" type="submit" name="reg_button" value="Submit" formmethod="post">
-						</form>
+							<input class="new-order-button" style="margin-top: 50px" type="submit" name="reg_button" value="Submit" formmethod="post">
+						</th:form>
 
 					</div>
 				</div>

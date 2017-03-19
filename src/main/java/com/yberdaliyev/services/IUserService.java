@@ -6,6 +6,7 @@ import com.yberdaliyev.models.pojos.User;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
 
 /**
  * Created by Yerlan on 02.03.2017.
@@ -16,7 +17,7 @@ public interface IUserService {
                   String user_name,
                   String user_surname,
                   String user_patronymic,
-                  String user_birthdate,
+                  Date user_birthdate,
                   String user_login,
                   String user_password,
                   String user_email);

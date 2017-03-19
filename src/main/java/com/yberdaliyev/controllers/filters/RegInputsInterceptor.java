@@ -30,7 +30,8 @@ public class RegInputsInterceptor extends HandlerInterceptorAdapter {
             } else {
                 logger.trace("regfilter: incorrect input in fields");
                 request.setAttribute("unfilled","visible");
-                request.getRequestDispatcher("/registration.jsp").forward(request,response);
+
+                request.getRequestDispatcher("/registration").forward(request,response);
             }
         } else {
             return true;

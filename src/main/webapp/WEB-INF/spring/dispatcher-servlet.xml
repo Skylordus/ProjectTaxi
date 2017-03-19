@@ -29,16 +29,16 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/registration"/>
-            <bean class="com.yberdaliyev.controllers.filters.RegInputsInterceptor"/>
-        </mvc:interceptor>
-        <mvc:interceptor>
-            <mvc:mapping path="/client_account"/>
-            <bean class="com.yberdaliyev.controllers.filters.ClientInputsInterceptor"/>
-        </mvc:interceptor>
-    </mvc:interceptors>
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/registration"/>-->
+            <!--<bean class="com.yberdaliyev.controllers.filters.RegInputsInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/client_account"/>-->
+            <!--<bean class="com.yberdaliyev.controllers.filters.ClientInputsInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
 
 </beans>
 

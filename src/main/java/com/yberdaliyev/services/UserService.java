@@ -1,10 +1,13 @@
 package com.yberdaliyev.services;
 
+import com.yberdaliyev.common.exceptions.EmailExistsException;
+import com.yberdaliyev.common.exceptions.LoginExistsException;
 import com.yberdaliyev.models.daos.*;
 import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.pojos.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +18,8 @@ import java.sql.Date;
  */
 @Service
 public class UserService implements IUserService {
+
+    private PasswordEncoder encoder;
 
     static Logger logger = Logger.getLogger(UserService.class);
 
@@ -31,14 +36,19 @@ public class UserService implements IUserService {
         this.IDriverDAO = IDriverDAO;
     }
 
+    @Autowired
+    public void setEncoder(PasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
+
     public void register(String user_role,
                          String user_name,
                          String user_surname,
                          String user_patronymic,
-                         String user_birthdate,
+                         Date user_birthdate,
                          String user_login,
                          String user_password,
-                         String user_email) {
+                         String user_email) throws EmailExistsException, LoginExistsException {
 
         User user = null;
 
@@ -53,9 +63,9 @@ public class UserService implements IUserService {
         user.setFirstname( user_name );
         user.setLastname( user_surname );
         user.setPatronymic( user_patronymic );
-        if (!user_birthdate.isEmpty()) user.setBirthdate(Date.valueOf(user_birthdate));
+        user.setBirthdate(user_birthdate);
         user.setLogin( user_login );
-        user.setPwd( user_password );
+        user.setPwd( encoder.encode(user_password) );
         user.setEmail( user_email );
 
         if (user_role.equals("client")) {

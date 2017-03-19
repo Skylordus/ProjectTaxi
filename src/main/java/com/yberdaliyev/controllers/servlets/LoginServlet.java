@@ -1,5 +1,6 @@
 package com.yberdaliyev.controllers.servlets;
 
+import com.sun.security.auth.UserPrincipal;
 import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.pojos.Admin;
 import com.yberdaliyev.models.pojos.Client;
@@ -7,6 +8,7 @@ import com.yberdaliyev.models.pojos.Driver;
 import com.yberdaliyev.models.pojos.User;
 import com.yberdaliyev.services.IUserService;
 import com.yberdaliyev.services.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,7 @@ import java.security.Principal;
  */
 @Controller
 public class LoginServlet {
+    private static Logger logger = Logger.getLogger(LoginServlet.class);
     private IUserService userService;
 
     @Autowired
@@ -36,37 +39,13 @@ public class LoginServlet {
         this.userService = userService;
     }
 
-//    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public ModelAndView doPost(HttpSession session,
-//                               @RequestParam(name = "userlogin") String login,
-//                               @RequestParam(name = "userpassword") String password) {
-//        ModelAndView modelAndView;
-//        User user = userService.authorize(login,password);
-//        session.setAttribute("user_object",user);
-//        session.setMaxInactiveInterval(10*60);
-//        session.setAttribute("incorrect_login",null);
-//
-//        if (user instanceof Admin) {
-//            session.setAttribute("user_role",3);
-//            modelAndView = new ModelAndView("redirect:/admin_account");
-//        } else
-//        if (user instanceof Driver) {
-//            session.setAttribute("user_role",2);
-//            modelAndView = new ModelAndView("redirect:/driver_account");
-//        } else
-//        if (user instanceof Client) {
-//            session.setAttribute("user_role",1);
-//            modelAndView = new ModelAndView("redirect:/user_account");
-//        } else {
-//            session.setAttribute("incorrect_login",1);
-//            modelAndView = new ModelAndView("index");
-//        }
-//        return modelAndView;
-//    }
 
     @RequestMapping(value = "/login")
     public ModelAndView login(HttpServletRequest request, HttpSession session)  {
+        String error = request.getParameter("error");
+        if ((error!=null)&&(error.equals("true"))) {return new ModelAndView("index");}
         ModelAndView modelAndView = new ModelAndView("failed");
+
         String login = request.getUserPrincipal().getName();
 
         USER_ROLES role = null;

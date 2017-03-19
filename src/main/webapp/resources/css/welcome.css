@@ -1,6 +1,20 @@
-x {
+.reg-label {
+    margin-top: 4px;
+}
+
+x, .error {
     color: red;
     font-size: 0.8em;
+}
+.error {
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+}
+.inputs-container {
+    position: relative;
+    margin-top: 5px;
+    height: 45px;
 }
 .sub-md-block {
     position: relative;     
@@ -54,8 +68,8 @@ x {
 }
 .registration-form {
     position: relative;
-    width: 600px;
-    height: 500px;
+    width: 520px;
+    height: 550px;
 }
 .order-labels {
     position: absolute;

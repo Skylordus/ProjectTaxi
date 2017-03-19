@@ -1,13 +1,15 @@
 package com.yberdaliyev.controllers.servlets;
 
+import com.yberdaliyev.models.forms.RegistrationForm;
 import com.yberdaliyev.services.IUserService;
 import org.apache.log4j.Logger;
 import com.yberdaliyev.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 
 /**
@@ -32,34 +35,45 @@ public class RegistrationServlet {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ModelAndView doPost(@RequestParam(name = "user_role") String user_role,
-                               @RequestParam(name = "user_name") String user_name,
-                               @RequestParam(name = "user_surname") String user_surname,
-                               @RequestParam(name = "user_patronymic") String user_patronymic,
-                               @RequestParam(name = "user_birthdate") String user_birthdate,
-                               @RequestParam(name = "user_login") String user_login,
-                               @RequestParam(name = "user_password") String user_password,
-                               @RequestParam(name = "user_email") String user_email) {
-        logger.trace("on POST Registration servlet");
+    @PostMapping("/registration")
+    public ModelAndView regFormSubmit(@Valid @ModelAttribute("regForm") RegistrationForm form, BindingResult result) {
+        logger.warn("on POST Registration servlet");
+        logger.warn("Binding result="+result);
         ModelAndView modelAndView = new ModelAndView("registration");
-        userService.register(user_role,
-                             user_name,
-                             user_surname,
-                             user_patronymic,
-                             user_birthdate,
-                             user_login,
-                             user_password,
-                             user_email);
+
+        if (result.hasErrors()) {
+            return modelAndView;
+        }
+
+        userService.register(form.getUser_role(),
+                             form.getUser_name(),
+                             form.getUser_surname(),
+                             form.getUser_patronymic(),
+                             form.getUser_birthdate(),
+                             form.getUser_login(),
+                             form.getUser_password(),
+                             form.getUser_email());
+
         return modelAndView;
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String doGet( ) {
-        logger.trace("on GET Registration servlet");
+    @GetMapping("/registration")
+    public String showRegForm( Model model ) {
+        logger.warn("on GET Registration servlet");
+        RegistrationForm regForm = new RegistrationForm();
+        model.addAttribute("regForm",regForm);
         return "registration";
     }
 
 
 
+
+//    @RequestParam(name = "user_role") String user_role,
+//    @RequestParam(name = "user_name") String user_name,
+//    @RequestParam(name = "user_surname") String user_surname,
+//    @RequestParam(name = "user_patronymic") String user_patronymic,
+//    @RequestParam(name = "user_birthdate") String user_birthdate,
+//    @RequestParam(name = "user_login") String user_login,
+//    @RequestParam(name = "user_password") String user_password,
+//    @RequestParam(name = "user_email") String user_email)
 }
