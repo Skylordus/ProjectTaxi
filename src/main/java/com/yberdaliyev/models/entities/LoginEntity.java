@@ -1,6 +1,7 @@
 package com.yberdaliyev.models.entities;
 
 import com.yberdaliyev.models.enums.USER_ROLES;
+import com.yberdaliyev.models.pojos.Driver;
 
 import javax.persistence.*;
 
@@ -17,11 +18,11 @@ public class LoginEntity {
     private USER_ROLES role;
     private boolean enabled = true;
 
-    @OneToOne(mappedBy = "login")
+    @OneToOne(mappedBy = "login", targetEntity = AdminEntity.class, cascade = CascadeType.ALL)
     private AdminEntity admin;
-    @OneToOne(mappedBy = "login")
+    @OneToOne(mappedBy = "login", targetEntity = ClientEntity.class, cascade = CascadeType.ALL)
     private ClientEntity client;
-    @OneToOne(mappedBy = "login")
+    @OneToOne(mappedBy = "login", targetEntity = DriverEntity.class, cascade = CascadeType.ALL)
     private DriverEntity driver;
 
     public LoginEntity(){}
