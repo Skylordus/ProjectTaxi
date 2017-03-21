@@ -4,6 +4,7 @@ import com.yberdaliyev.models.entities.ClientEntity;
 import com.yberdaliyev.models.pojos.Client;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,33 +14,33 @@ import java.util.List;
  */
 
 public interface IClientService {
-    ClientEntity generateClient(String id,
+    Client generateClient(long id,
                           String firstname,
                           String lastname,
                           String patronymic,
-                          String date_registered,
-                          String orders_amount,
-                          String birthdate,
+                          Date date_registered,
+                          int orders_amount,
+                          Date birthdate,
                           String login,
                           String email,
-                          String order);
+                          long order);
 
-    boolean updateClient(String id,
+    void updateClient(long id,
                          String firstname,
                          String lastname,
                          String patronymic,
-                         String date_registered,
-                         String orders_amount,
-                         String birthdate,
+                         Date date_registered,
+                         int orders_amount,
+                         Date birthdate,
                          String login,
                          String email,
-                         String order);
-    Long insert(ClientEntity client, boolean getID);
-    boolean delete(Long id);
-    ClientEntity getClient(Long id);
+                         long order);
+    Long insert(Client client, boolean getID);
+    void delete(Long id);
+    Client getClient(Long id);
     HashMap<Long,String> getClientNamesMappedById(List<Long> IDs);
-    List<ClientEntity> getAll();
-    boolean updateOrder(Long client_id, Long order_id);
-    boolean increaseOrdersCount(Long client_id);
+    List<Client> getAll();
+    void updateOrder(Long client_id, Long order_id);
+    void increaseOrdersCount(Long client_id);
 
 }

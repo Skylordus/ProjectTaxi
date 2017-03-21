@@ -5,8 +5,10 @@ import com.yberdaliyev.models.pojos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -47,51 +49,65 @@ public class OrderService implements IOrderService {
         return order;
     }
 
-    public boolean setStatus(Long orderID, int status) {
-        return updateOrder(orderID.toString(),
+    public void setStatus(long orderID, int status) {
+        updateOrder(orderID,
                 "",
                 "",
-                "",
-                "",
-                "",
-                String.valueOf(status),
-                "");
+                0,
+                0,
+                0,
+                status,
+                null);
     }
 
     @Override
-    public ArrayList<Order> getAll() {
+    public List<Order> getAll() {
         return orderDAO.getAll();
     }
     @Override
-    public ArrayList<Order> getFreeOrders()  {
+    public List<Order> getFreeOrders()  {
         return orderDAO.getFreeOrders();
     }
     @Override
-    public Order generateOrder(String id, String from, String to, String price, String client, String driver, String status, String time) {
+    public Order generateOrder(long id,
+                               String from,
+                               String to,
+                               int price,
+                               long client,
+                               long driver,
+                               int status,
+                               Time time) {
         Order order = new Order();
-        order.setId(Long.parseLong(id));
+        order.setId(id);
         order.setFrom(from);
         order.setTo(to);
-        order.setClient(Long.parseLong(client));
-        order.setDriver(Long.parseLong(driver));
-        order.setPrice_per_km(Long.parseLong(price));
-        order.setStatus(Long.parseLong(status));
-        order.setPickup_time(Time.valueOf(time+":00"));
+        order.setClient(client);
+        order.setDriver(driver);
+        order.setPrice_per_km(price);
+        order.setStatus(status);
+        order.setPickup_time(time);
         return order;
     }
 
     @Override
-    public boolean updateOrder(String id, String from, String to, String price, String client, String driver, String status, String time) {
-        long order_id = Long.parseLong(id);
-        Properties columns = new Properties();
-        if (!from.isEmpty()) columns.put("\"from\"",from);
-        if (!to.isEmpty()) columns.put("\"to\"",to);
-        if (!price.isEmpty()) columns.put("price_per_km",price);
-        if (!client.isEmpty()) columns.put("client",client);
-        if (!driver.isEmpty()) columns.put("driver",driver);
-        if (!status.isEmpty()) columns.put("status",status);
-        if (!time.isEmpty()) columns.put("pickup_time",time);
-        return orderDAO.updateById(order_id,columns);
+    public void updateOrder(long id,
+                            String from,
+                            String to,
+                            int price,
+                            long client,
+                            long driver,
+                            int status,
+                            Time time) {
+        Order order = new Order(id,
+                from,
+                to,
+                price,
+                time,
+                client,
+                driver,
+                status);
+
+        orderDAO.updateById(id,order);
     }
 
     @Override
@@ -100,36 +116,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         Order order = getOrder(id);
-        driverService.updateOrder(order.getDriver(),0l);
-        clientService.updateOrder(order.getClient(),0l);
-        if (orderDAO.deleteById(id)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public Order generateOrder(Client client,
-                                String from,
-                                String to,
-                                String pickup_time,
-                                String plan) {
-
-        Order order = new Order();
-        order.setFrom(from);
-        order.setTo(to);
-        order.setPickup_time(Time.valueOf(pickup_time+":00"));
-        order.setStatus((long)0);
-        order.setClient(client.getId());
-        String str = plan;
-        if ( str.equals("economy") ) {
-            order.setPrice_per_km((long) 16);
-        } else if ( str.equals("comfort") ) {
-            order.setPrice_per_km((long) 25);
-        } else order.setPrice_per_km((long) 40);
-        return order;
+//        driverService.updateOrder(order.getDriver(),0l);
+//        clientService.updateOrder(order.getClient(),0l);
+        orderDAO.deleteById(id);
     }
 
 }

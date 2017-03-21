@@ -4,6 +4,7 @@ import com.yberdaliyev.models.pojos.Driver;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -13,9 +14,9 @@ import java.util.Properties;
 public interface IDriverDAO {
 
     Long insert(Driver driver, boolean getID);
-    ArrayList<Driver> getAll();
-    boolean updateById(Long id, Properties columns);
-    boolean deleteById(Long id);
+    List<Driver> getAll();
+    void updateById(Long id, Driver driver);
+    void deleteById(Long id);
     Driver getById(long id);
-    boolean updateOrder(Long driver_id, Long order_id);
+    void updateOrder(Long driver_id, Long order_id);
 }

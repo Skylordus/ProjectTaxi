@@ -3,7 +3,9 @@ package com.yberdaliyev.services;
 import com.yberdaliyev.models.pojos.Admin;
 import com.yberdaliyev.models.pojos.Driver;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yerlan on 02.03.2017.
@@ -11,23 +13,23 @@ import java.util.ArrayList;
 
 public interface IAdminService {
     Admin getAdmin(Long id);
-    Admin generateAdmin(String id,
-                          String firstname,
-                          String lastname,
-                          String patronymic,
-                          String birthdate,
-                          String login,
-                          String email);
+    Admin generateAdmin(long id,
+                        String firstname,
+                        String lastname,
+                        String patronymic,
+                        Date birthdate,
+                        String login,
+                        String email);
 
-    boolean updateAdmin(String id,
+    void updateAdmin(long id,
                          String firstname,
                          String lastname,
                          String patronymic,
-                         String birthdate,
+                         Date birthdate,
                          String login,
                          String email);
 
     Long insert(Admin admin, boolean getID);
-    boolean delete(Long id);
-    ArrayList<Admin> getAll();
+    void delete(Long id);
+    List<Admin> getAll();
 }

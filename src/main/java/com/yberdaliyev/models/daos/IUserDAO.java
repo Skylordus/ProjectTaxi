@@ -14,7 +14,6 @@ import java.sql.SQLException;
  */
 
 public interface IUserDAO {
-    PreparedStatement insert(String statement, User user);
 
     User getByLoginAndRole(String login, USER_ROLES role);
 

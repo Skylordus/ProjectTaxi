@@ -1,102 +1,79 @@
 package com.yberdaliyev.models.daos;
 
 import com.yberdaliyev.models.connectors.Connector;
+import com.yberdaliyev.models.entities.AdminEntity;
+import com.yberdaliyev.models.entities.ClientEntity;
+import com.yberdaliyev.models.entities.DriverEntity;
+import com.yberdaliyev.models.entities.LoginEntity;
 import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.pojos.*;
+import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
 import com.yberdaliyev.services.UserService;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Transactional
 @Repository
 public class UserDAO implements IUserDAO {
     private static Logger logger = Logger.getLogger(UserDAO.class);
-    private static final String SQL_INSERT_LOGIN = "INSERT INTO main.logins " +
-            "(login,pwd,role) "+
-            "values (?,?,?::main.user_role);";
-    private static final String SQL_SELECT_LOGIN = "SELECT * FROM main.logins " +
-                                                   "WHERE login=? AND pwd=?";
-    private static final String SQL_SELECT_LOGIN_ONLY = "SELECT * FROM main.logins " +
-                                                          "WHERE login=?";
+    private EntityToPojoTransformer entityToPojo;
 
-    @Override
-    public PreparedStatement insert(String statement, User user) {
-        try {Connection conn = Connector.getConnection();
-            PreparedStatement prepS = conn.prepareStatement(SQL_INSERT_LOGIN+statement);
-            prepS.setString(1,user.getLogin());
-            prepS.setString(2,user.getPwd());
+    @PersistenceContext
+    private EntityManager manager;
 
-            USER_ROLES role = USER_ROLES.ROLE_ADMIN;
-            if (user instanceof Client) {role=USER_ROLES.ROLE_CLIENT;} else
-            if (user instanceof Driver) {role=USER_ROLES.ROLE_DRIVER;}
-            prepS.setString(3, role.toString());
-
-            prepS.setString(4,user.getFirstname());
-            prepS.setString(5,user.getLastname());
-            prepS.setString(6,user.getPatronymic());
-            prepS.setDate(7,user.getBirthdate());
-            prepS.setString(8,user.getLogin());
-            prepS.setString(9,user.getEmail());
-            return prepS;
-        } catch (SQLException e) {
-            logger.error("sql error in insertUser method",e);
-        }
-        return null;
-    }
+    @Autowired
+    public void setEntityToPojo(EntityToPojoTransformer entityToPojo) {this.entityToPojo = entityToPojo;}
 
     @Override
     public User getByLoginAndRole(String login, USER_ROLES role) {
-        try (Connection conn = Connector.getConnection()){
 
-            String query = "SELECT * FROM ";
+        CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+        CriteriaQuery criteriaQuery = null;
+        Root root = null;
 
-            switch (role) {
-                case ROLE_ADMIN:
-                    query += "main.admins ";
-                    break;
-                case ROLE_CLIENT:
-                    query += "main.clients ";
-                    break;
-                case ROLE_DRIVER:
-                    query += "main.drivers ";
-            }
-            query += "WHERE login=?";
-            PreparedStatement prep = conn.prepareStatement(query);
-            prep.setString(1,login);
-            ResultSet rs = prep.executeQuery();
-            if (!rs.next()) return null;
-            switch (role) {
-                case ROLE_ADMIN:
-                    Admin admin = new Admin();
-                    setFields(admin,rs);
-                    return admin;
-                case ROLE_CLIENT:
-                    Client client = new Client();
-                    setFields(client,rs);
-                    client.setDate_registered(rs.getDate("date_registered"));
-                    client.setOrders_amount(rs.getLong("orders_amount"));
-                    client.setOrder(rs.getLong("order"));
-                    return client;
-                case ROLE_DRIVER:
-                    Driver driver = new Driver();
-                    setFields(driver,rs);
-                    driver.setCar(rs.getLong("car"));
-                    driver.setExperience_years(rs.getLong("experience_years"));
-                    driver.setOrder(rs.getLong("order"));
-                    return driver;
-            }
-        } catch (SQLException e) {
-            logger.error("SQL exception: getBY login and role UserDAO",e);
+        switch (role) {
+            case ROLE_ADMIN:
+                criteriaQuery = criteriaBuilder.createQuery(AdminEntity.class);
+                root = criteriaQuery.from(AdminEntity.class);
+                break;
+            case ROLE_CLIENT:
+                criteriaQuery = criteriaBuilder.createQuery(ClientEntity.class);
+                root = criteriaQuery.from(ClientEntity.class);
+                break;
+            case ROLE_DRIVER:
+                criteriaQuery = criteriaBuilder.createQuery(DriverEntity.class);
+                root = criteriaQuery.from(DriverEntity.class);
         }
-        return null;
+
+        criteriaQuery.select(root);
+        criteriaQuery.where(
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("login"), login)
+                )
+        );
+
+        User user = (User) manager.createQuery(criteriaQuery).getSingleResult();
+
+        return user;
+
     }
 
     @Override
@@ -112,19 +89,7 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public MyUserDetails getUserDetailsByLogin(String login) {
-        MyUserDetails myUserDetails = new MyUserDetails();
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(SQL_SELECT_LOGIN_ONLY)) {
-            prepS.setString(1,login);
-            ResultSet rs = prepS.executeQuery();
-            if ( !rs.next() ) return null;
-            myUserDetails.setLogin(login);
-            myUserDetails.setPwd(rs.getString("pwd"));
-            myUserDetails.setRole(rs.getString("role"));
-            myUserDetails.setEnabled(rs.getBoolean("enabled"));
-        } catch (SQLException e) {
-            logger.error("SQL exception: get MyUserDetails BY login UserDAO",e);
-        }
-        return myUserDetails;
+        LoginEntity loginEntity = manager.find(LoginEntity.class,login);
+        return entityToPojo.toUserDetails(loginEntity);
     }
 }

@@ -31,7 +31,7 @@ public class MyUserDetailsService implements UserDetailsService {
         if (userDetails==null) throw new UsernameNotFoundException(username);
 
         List<SimpleGrantedAuthority> authorityList = new LinkedList<>();
-        authorityList.add(new SimpleGrantedAuthority(userDetails.getRole()));
+        authorityList.add(new SimpleGrantedAuthority(userDetails.getRole().toString()));
 
         return new org.springframework.security.core.userdetails.User(username,userDetails.getPwd(),
                 userDetails.getEnabled(),true,

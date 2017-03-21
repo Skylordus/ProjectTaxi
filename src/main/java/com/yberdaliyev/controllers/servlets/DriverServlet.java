@@ -10,9 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -56,7 +54,7 @@ public class DriverServlet {
     }
 
 
-    @RequestMapping(value = "/driver_account", method = RequestMethod.POST)
+    @PostMapping("/driver_account")
     public ModelAndView doPost(HttpSession session,
                                @RequestParam(name="order_id") Long order_id,
                                @RequestParam(name="type") String type,
@@ -69,41 +67,32 @@ public class DriverServlet {
 
         if ( type.equals("pick") ) {
             String status = String.valueOf(OrderService.STATUS_NOT_STARTED);
-            boolean isUpdated = orderService.updateOrder(order_id.toString(),
+            orderService.updateOrder(order_id,
+                    "",
+                    "",
+                    0,
+                    0L,
+                    driver_id,
+                    0,
+                    null);
+
+            driverService.updateDriver(driver_id,
                     "",
                     "",
                     "",
-                    "",
-                    driver_id.toString(),
-                    status,
-                    "");
-            if (!isUpdated) {
-                modelAndView.setViewName("failed");
-                modelAndView.addObject("cause", "order not updated. in DriverServlet");
-                return modelAndView;
-            }
-            isUpdated = driverService.updateDriver(driver_id.toString(),
+                    0,
+                    0L,
+                    null,
                     "",
                     "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    order_id.toString());
-            if (!isUpdated) {
-                modelAndView.setViewName("failed");
-                modelAndView.addObject("cause", "driver not updated. in DriverServlet");
-                return modelAndView;
-            }
+                    order_id);
         } else
         if ( type.equals("on_execution") ) {
             orderService.setStatus(order_id,OrderService.STATUS_FULFILLING);
         } else
         if ( type.equals("finished") ) {
             orderService.delete(order_id);
-            order_id = 0l;
+            order_id = 0L;
             clientService.increaseOrdersCount(client_id);
         }
         driver.setOrder(order_id);
@@ -112,7 +101,7 @@ public class DriverServlet {
     }
 
 
-    @RequestMapping(value = "/driver_account", method = RequestMethod.GET)
+    @GetMapping("/driver_account")
     public ModelAndView doGet(HttpSession session)  {
         logger.warn("on doGet DriverServlet");
         ModelAndView modelAndView = new ModelAndView("driver_account");
@@ -132,17 +121,17 @@ public class DriverServlet {
 
         if (showOrder) {
             modelAndView.addObject("your_order",order);
-            ClientEntity client = clientService.getClient(order.getClient());
+            Client client = clientService.getClient(order.getClient());
             String clientName = client.getFirstname()+" "+client.getPatronymic()+" "+client.getLastname();
             modelAndView.addObject("client",clientName);
             Car car = carService.getCar(driver.getCar());
             String carName = "No car";
             if (car!=null) carName = car.toString();
             modelAndView.addObject("car",carName);
-            modelAndView.addObject("status", OrderService.STATUS_MESSAGES[order.getStatus().intValue()]);
+            modelAndView.addObject("status", OrderService.STATUS_MESSAGES[order.getStatus()]);
             modelAndView.addObject("isPicked",true);
         } else {
-            ArrayList<Order> orders = orderService.getFreeOrders();
+            List<Order> orders = orderService.getFreeOrders();
             modelAndView.addObject("orders",orders);
             List<Long> list = new ArrayList<>();
             for (Order o:orders) {

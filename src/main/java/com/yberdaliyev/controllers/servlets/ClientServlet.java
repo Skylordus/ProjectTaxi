@@ -1,5 +1,6 @@
 package com.yberdaliyev.controllers.servlets;
 
+import com.yberdaliyev.models.forms.OrderTableForm;
 import com.yberdaliyev.models.pojos.Car;
 import com.yberdaliyev.models.pojos.Client;
 import com.yberdaliyev.models.pojos.Driver;
@@ -9,9 +10,7 @@ import com.yberdaliyev.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -45,24 +44,24 @@ public class ClientServlet {
     }
 
 
-    @RequestMapping(value = "/client_account", method = RequestMethod.POST)
+    @PostMapping("/client_account")
     public ModelAndView doPost(HttpSession session,
                                @RequestParam(name = "type") String type,
-                               @RequestParam(name = "from", required = false) String from,
-                               @RequestParam(name = "to", required = false) String to,
-                               @RequestParam(name = "pickup_time", required = false) String pickup_time,
-                               @RequestParam(name = "plan", required = false) String plan) {
+                               @ModelAttribute OrderTableForm form) {
         ModelAndView modelAndView = new ModelAndView("client_account");
         Client client = (Client) session.getAttribute("user_object");
         logger.warn("in do Post type = "+type);
 
         if (type == null) {} else
         if (type.equals("new_order")){
-            Order order = orderService.generateOrder(client,
-                                        from,
-                                        to,
-                                        pickup_time,
-                                        plan);
+            Order order = orderService.generateOrder(0L,
+                    form.getFrom(),
+                    form.getTo(),
+                    form.getPrice(),
+                    form.getClient_id(),
+                    0L,
+                    0,
+                    form.getPickup_time());
             Long id = orderService.insert(order, true);
             logger.error("in new order = "+order.toString());
             client.setOrder(id);
@@ -78,7 +77,7 @@ public class ClientServlet {
     }
 
 
-    @RequestMapping(value = "/client_account", method = RequestMethod.GET)
+    @GetMapping(value = "/client_account")
     public ModelAndView doGet(HttpSession session) {
         logger.warn("on doGET client Servlet");
         ModelAndView modelAndView = new ModelAndView("client_account");
@@ -123,7 +122,7 @@ public class ClientServlet {
             }
             modelAndView.addObject("driver",str);
             modelAndView.addObject("car",str2);
-            modelAndView.addObject("status",OrderService.STATUS_MESSAGES[order.getStatus().intValue()]);
+            modelAndView.addObject("status",OrderService.STATUS_MESSAGES[order.getStatus()]);
         }
         return modelAndView;
     }

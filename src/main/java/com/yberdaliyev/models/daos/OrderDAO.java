@@ -1,183 +1,108 @@
 package com.yberdaliyev.models.daos;
 
 import com.yberdaliyev.models.connectors.Connector;
+import com.yberdaliyev.models.entities.OrderEntity;
 import com.yberdaliyev.models.pojos.Order;
+import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
+import com.yberdaliyev.models.transformers.PojoToEntityTransformer;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 @Repository
+@Transactional
 public class OrderDAO implements IOrderDAO {
     private static Logger logger = Logger.getLogger(OrderDAO.class);
+    private EntityToPojoTransformer entityToPojo;
+    private PojoToEntityTransformer pojoToEntity;
 
-    private static final String SQL_INSERT_ORDER = "INSERT INTO main.orders " +
-                                                   "(\"from\", \"to\", price_per_km, client, status, pickup_time) "+
-                                                   "values (?,?,?,?,?,?);";
-    private static final String SQL_SELECT_ID = "SELECT * FROM main.orders " +
-                                                "WHERE id=?;";
-    private static final String SQL_SELECT_MAXID = "SELECT max(id) FROM main.orders;";
-    private static final String SQL_DELETE_ORDER = "DELETE FROM main.orders WHERE id=?;";
-    private static final String SQL_GET_ALL_ORDERS = "SELECT * FROM main.orders ORDER BY id ASC";
-    private static final String SQL_GET_FREE_ORDERS = "SELECT * FROM main.orders WHERE status=0 ORDER BY id ASC";
-    private static final String SQL_UPDATE_ORDER = "UPDATE main.orders SET ";
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    public void setEntityToPojo(EntityToPojoTransformer entityToPojo) {this.entityToPojo = entityToPojo;}
+    @Autowired
+    public void setPojoToEntity(PojoToEntityTransformer pojoToEntity) {this.pojoToEntity = pojoToEntity;}
 
     @Override
     public Long insert(Order order, boolean getID) {
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(SQL_INSERT_ORDER)) {
-            prepS.setString(1,order.getFrom());
-            prepS.setString(2,order.getTo());
-            prepS.setLong(3,order.getPrice_per_km());
-            prepS.setLong(4,order.getClient());
-            prepS.setLong(5,order.getStatus());
-            prepS.setTime(6,order.getPickup_time());
-            if (prepS.executeUpdate()>0) {
-                if (!getID) return (long) -1;
-                ResultSet rs = conn.prepareStatement(SQL_SELECT_MAXID).executeQuery();
-                rs.next();
-                Long id = rs.getLong("max");
-                return id;
-            }
-        } catch (SQLException e) {
-            logger.error("sql error in orderDAO.insert() method",e);
-        }
-        return null;
+        logger.warn("trying to insert a new order");
+        OrderEntity orderEntity = pojoToEntity.toOrderEntity(order);
+        manager.persist(orderEntity);
+        logger.warn("inserting a new order with ID="+orderEntity.getId());
+        if (getID) {return orderEntity.getId();}
+        else return 0L;
     }
 
     @Override
     public Order getById(long id) {
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(SQL_SELECT_ID)) {
-            prepS.setLong(1,id);
-            ResultSet resultSet = prepS.executeQuery();
-            Order order = new Order();
-            if (!resultSet.next()) return null;
-            order.setId(id);
-            order.setClient(resultSet.getLong("client"));
-            order.setDriver(resultSet.getLong("driver"));
-            order.setFrom(resultSet.getString("from"));
-            order.setTo(resultSet.getString("to"));
-            order.setPrice_per_km(resultSet.getLong("price_per_km"));
-            order.setStatus(resultSet.getLong("status"));
-            order.setPickup_time(resultSet.getTime("pickup_time"));
-            return order;
-        } catch (SQLException e ) {
-            logger.error("error",e);
-        }
-        return null;
+        logger.warn("getting order by ID="+id);
+        OrderEntity orderEntity = manager.find(OrderEntity.class, id);
+        if (orderEntity == null) return null;
+        return entityToPojo.toOrder(orderEntity);
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        try (Connection conn = Connector.getConnection();
-            PreparedStatement prepS = conn.prepareStatement(SQL_DELETE_ORDER)) {
-            prepS.setLong(1,id);
-            if (prepS.executeUpdate()>0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("sql error in orderDAO.deleteById() method",e);
-        }
-        return false;
+    public void deleteById(Long id) {
+        logger.warn("deleting order with id="+id);
+        OrderEntity orderEntity = manager.find(OrderEntity.class, id);
+        manager.remove(orderEntity);
     }
 
     @Override
-    public boolean updateById(Long id, Properties columns) {
-        if (columns.isEmpty()) {
-            logger.warn("empty update request");
-            return true;
-        }
-        String query = SQL_UPDATE_ORDER;
-        for (String key : columns.stringPropertyNames()) {
-            query += key+"="+"?, ";
-        }
-        query = query.substring(0,query.length()-2);
-        query += " WHERE id="+id+";";
-        logger.warn(query);
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(query)) {
-             int i = 1;
-            for (String key : columns.stringPropertyNames()) {
-                switch (key) {
-                    default:
-                        prepS.setString(i,columns.getProperty(key));
-                        i++;
-                        break;
-                    case "price_per_km":
-                    case "client":
-                    case "driver":
-                    case "status":
-                        prepS.setInt(i,Integer.parseInt(columns.getProperty(key)));
-                        i++;
-                        break;
-                    case "pickup_time":
-                        prepS.setTime(i, Time.valueOf(columns.getProperty(key)+":00"));
-                        i++;
-                }
-            }
-            logger.warn(prepS);
-            if (prepS.executeUpdate()>0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("sql error in orderDAO.update() method",e);
-        }
-        return false;
+    public void updateById(Long id, Order order) {
+        logger.warn("trying to update a order with id="+id);
+        OrderEntity orderEntity = manager.find(OrderEntity.class, id);
+        if (order.getClient() > 0) orderEntity.setClient(order.getClient());
+        if (order.getStatus() > -1) orderEntity.setStatus(order.getStatus());
+        if (order.getPickup_time() != null) orderEntity.setPickup_time(order.getPickup_time());
+        if (order.getPrice_per_km() > 0) orderEntity.setPrice_per_km(order.getPrice_per_km());
+        if (order.getFrom() != null) orderEntity.setFrom(order.getFrom());
+        if (order.getTo() != null) orderEntity.setTo(order.getTo());
+        if (order.getDriver() > 0) orderEntity.setDriver(order.getDriver());
     }
 
     @Override
-    public ArrayList<Order> getAll() {
-        Order order;
-        ArrayList<Order> orders = new ArrayList<>();
-        try (Connection conn = Connector.getConnection();
-            PreparedStatement prepS = conn.prepareStatement(SQL_GET_ALL_ORDERS) ) {
-            ResultSet resultSet = prepS.executeQuery();
-            while (resultSet.next()){
-                order = new Order();
-                order.setId(resultSet.getLong("id"));
-                order.setFrom(resultSet.getString("from"));
-                order.setTo(resultSet.getString("to"));
-                order.setPrice_per_km(resultSet.getLong("price_per_km"));
-                order.setClient(resultSet.getLong("client"));
-                order.setDriver(resultSet.getLong("driver"));
-                order.setStatus(resultSet.getLong("status"));
-                order.setPickup_time(resultSet.getTime("pickup_time"));
-                orders.add(order);
-            }
-        } catch (SQLException e) {
-            logger.error("sql error in get all orders",e);
+    public List<Order> getAll() {
+        logger.warn("getting all orders");
+        List<OrderEntity> orderEntities = manager.createQuery("Select a From OrderEntity a", OrderEntity.class).getResultList();
+
+        List<Order> orders = new ArrayList<>();
+        for (OrderEntity orderEntity : orderEntities) {
+            orders.add(entityToPojo.toOrder(orderEntity));
         }
         return orders;
     }
 
     @Override
-    public ArrayList<Order> getFreeOrders() {
-        Order order;
-        ArrayList<Order> orders = new ArrayList<>();
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(SQL_GET_FREE_ORDERS) ) {
-            ResultSet resultSet = prepS.executeQuery();
-            while (resultSet.next()){
-                order = new Order();
-                order.setId(resultSet.getLong("id"));
-                order.setFrom(resultSet.getString("from"));
-                order.setTo(resultSet.getString("to"));
-                order.setPrice_per_km(resultSet.getLong("price_per_km"));
-                order.setClient(resultSet.getLong("client"));
-                order.setDriver(resultSet.getLong("driver"));
-                order.setStatus(resultSet.getLong("status"));
-                order.setPickup_time(resultSet.getTime("pickup_time"));
-                orders.add(order);
-            }
-        } catch (SQLException e) {
-            logger.error("sql error in get all orders",e);
-        }
+    public List<Order> getFreeOrders() {
+        CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+        CriteriaQuery<OrderEntity> criteriaQuery = criteriaBuilder.createQuery(OrderEntity.class);
+        Root<OrderEntity> root = criteriaQuery.from(OrderEntity.class);
+
+        criteriaQuery.select(root);
+        criteriaQuery.where(
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("driver"), null)
+                )
+        );
+
+        List orders = manager.createQuery(criteriaQuery).getResultList();
+
         return orders;
+
     }
 
 }

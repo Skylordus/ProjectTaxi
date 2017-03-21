@@ -67,14 +67,4 @@ public class RegistrationServlet {
     }
 
 
-
-
-//    @RequestParam(name = "user_role") String user_role,
-//    @RequestParam(name = "user_name") String user_name,
-//    @RequestParam(name = "user_surname") String user_surname,
-//    @RequestParam(name = "user_patronymic") String user_patronymic,
-//    @RequestParam(name = "user_birthdate") String user_birthdate,
-//    @RequestParam(name = "user_login") String user_login,
-//    @RequestParam(name = "user_password") String user_password,
-//    @RequestParam(name = "user_email") String user_email)
 }

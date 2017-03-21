@@ -3,7 +3,9 @@ package com.yberdaliyev.services;
 import com.yberdaliyev.models.pojos.Driver;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yerlan on 02.03.2017.
@@ -11,30 +13,30 @@ import java.util.ArrayList;
 
 public interface IDriverService {
     Driver getDriver(Long id);
-    Driver generateDriver(String id,
+    Driver generateDriver(long id,
                           String firstname,
                           String lastname,
                           String patronymic,
-                          String experience_years,
-                          String car,
-                          String birthdate,
+                          int experience_years,
+                          long car,
+                          Date birthdate,
                           String login,
                           String email,
-                          String order);
+                          long order);
 
-    boolean updateDriver(String id,
+    void updateDriver(long id,
                          String firstname,
                          String lastname,
                          String patronymic,
-                         String experience_years,
-                         String car,
-                         String birthdate,
+                         int experience_years,
+                         long car,
+                         Date birthdate,
                          String login,
                          String email,
-                         String order);
+                         long order);
 
     Long insert(Driver driver, boolean getID);
-    boolean delete(Long id);
-    boolean updateOrder(Long client_id, Long order_id);
-    ArrayList<Driver> getAll();
+    void delete(Long id);
+    void updateOrder(Long client_id, Long order_id);
+    List<Driver> getAll();
 }

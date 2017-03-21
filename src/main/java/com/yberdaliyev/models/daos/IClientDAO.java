@@ -1,10 +1,6 @@
 package com.yberdaliyev.models.daos;
 
-import com.yberdaliyev.models.entities.ClientEntity;
 import com.yberdaliyev.models.pojos.Client;
-import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -13,11 +9,11 @@ import java.util.Properties;
  */
 
 public interface IClientDAO {
-    Long insert(ClientEntity clientEntity, boolean getID);
-    List<ClientEntity> getAll();
-    boolean updateById(Long id, Properties columns);
-    boolean updateOrder(Long client_id, Long order_id);
-    boolean deleteById(Long id);
-    ClientEntity getById(long id);
-    boolean increaseOrdersCount(Long client_id);
+    Long insert(Client client, boolean getID);
+    List<Client> getAll();
+    void updateById(Long id, Client client);
+    void updateOrder(Long client_id, Long order_id);
+    void  deleteById(Long id);
+    Client getById(long id);
+    void increaseOrdersCount(Long client_id);
 }

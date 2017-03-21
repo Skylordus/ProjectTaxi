@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -29,53 +30,54 @@ public class DriverService implements IDriverService {
     }
 
     @Override
-    public Driver generateDriver(String id,
+    public Driver generateDriver(long id,
                                  String firstname,
                                  String lastname,
                                  String patronymic,
-                                 String experience_years,
-                                 String car,
-                                 String birthdate,
+                                 int experience_years,
+                                 long car,
+                                 Date birthdate,
                                  String login,
                                  String email,
-                                 String order) {
+                                 long order) {
         Driver driver = new Driver();
-        if (!id.isEmpty()) driver.setId(Long.parseLong(id));
+        driver.setId(id);
         driver.setFirstname(firstname);
         driver.setLogin(login);
         driver.setLastname(lastname);
         driver.setPatronymic(patronymic);
-        if (!experience_years.isEmpty()) driver.setExperience_years(Long.parseLong(experience_years));
-        if (!car.isEmpty()) driver.setCar(Long.parseLong(car));
-        if (!birthdate.isEmpty()) driver.setBirthdate(Date.valueOf(birthdate));
-        if (!order.isEmpty()) driver.setOrder(Long.parseLong(order));
+        driver.setExperience_years(experience_years);
+        driver.setCar(car);
+        driver.setBirthdate(birthdate);
+        driver.setOrder(order);
         driver.setEmail(email);
         return driver;
     }
 
     @Override
-    public boolean updateDriver(String id,
+    public void updateDriver(long id,
                                 String firstname,
                                 String lastname,
                                 String patronymic,
-                                String experience_years,
-                                String car,
-                                String birthdate,
+                                int experience_years,
+                                long car,
+                                Date birthdate,
                                 String login,
                                 String email,
-                                String order) {
-        long driver_id = Long.parseLong(id);
-        Properties columns = new Properties();
-        if (!firstname.isEmpty()) columns.put("firstname",firstname);
-        if (!lastname.isEmpty()) columns.put("lastname",lastname);
-        if (!patronymic.isEmpty()) columns.put("patronymic",patronymic);
-        if (!experience_years.isEmpty()) columns.put("experience_years",experience_years);
-        if (!car.isEmpty()) columns.put("car",car);
-        if (!birthdate.isEmpty()) columns.put("birthdate",birthdate);
-        if (!login.isEmpty()) columns.put("login",login);
-        if (!email.isEmpty()) columns.put("email",email);
-        if (!order.isEmpty()) columns.put("\"order\"",order);
-        return driverDAO.updateById(driver_id,columns);
+                                long order) {
+
+        Driver driver = new Driver(id,
+                experience_years,
+                car,
+                firstname,
+                lastname,
+                patronymic,
+                birthdate,
+                login,
+                email,
+                order,
+                null);
+        driverDAO.updateById(id,driver);
     }
 
     @Override
@@ -84,19 +86,16 @@ public class DriverService implements IDriverService {
     }
 
     @Override
-    public boolean delete(Long id) {
-        if (driverDAO.deleteById(id)) {
-            return true;
-        }
-        return false;
+    public void delete(Long id) {
+        driverDAO.deleteById(id);
     }
     @Override
-    public boolean updateOrder(Long driver_id, Long order_id) {
-        if (driverDAO.updateOrder(driver_id,order_id)) return true;
-        return false;
+    public void updateOrder(Long driver_id, Long order_id) {
+      driverDAO.updateOrder(driver_id,order_id);
     }
+
     @Override
-    public ArrayList<Driver> getAll() {
+    public List<Driver> getAll() {
         return driverDAO.getAll();
     }
 

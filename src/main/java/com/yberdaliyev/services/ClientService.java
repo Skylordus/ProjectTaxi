@@ -1,7 +1,6 @@
 package com.yberdaliyev.services;
 
 import com.yberdaliyev.models.daos.IClientDAO;
-import com.yberdaliyev.models.entities.ClientEntity;
 import com.yberdaliyev.models.pojos.Client;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,71 +24,70 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public ClientEntity generateClient(String id,
+    public Client generateClient(long id,
                                  String firstname,
                                  String lastname,
                                  String patronymic,
-                                 String date_registered,
-                                 String orders_amount,
-                                 String birthdate,
+                                 Date date_registered,
+                                 int orders_amount,
+                                 Date birthdate,
                                  String login,
                                  String email,
-                                 String order) {
-        ClientEntity client = new ClientEntity();
-        client.setId(Long.parseLong(id));
+                                 long order) {
+        Client client = new Client();
+        client.setId(id);
         client.setFirstname(firstname);
         client.setLogin(login);
         client.setLastname(lastname);
         client.setPatronymic(patronymic);
-        client.setOrder(Long.parseLong(order));
-        client.setDate_registered(Date.valueOf(date_registered));
-        client.setBirthdate(Date.valueOf(birthdate));
-        client.setOrders_amount(Integer.parseInt(orders_amount));
+        client.setOrder(order);
+        client.setDate_registered(date_registered);
+        client.setBirthdate(birthdate);
+        client.setOrders_amount(orders_amount);
         client.setEmail(email);
         return client;
     }
 
     @Override
-    public boolean updateClient(String id,
-                                String firstname,
-                                String lastname,
-                                String patronymic,
-                                String date_registered,
-                                String orders_amount,
-                                String birthdate,
-                                String login,
-                                String email,
-                                String order) {
-        long client_id = Long.parseLong(id);
-        Properties columns = new Properties();
-        if (!firstname.isEmpty()) columns.put("firstname",firstname);
-        if (!lastname.isEmpty()) columns.put("lastname",lastname);
-        if (!patronymic.isEmpty()) columns.put("patronymic",patronymic);
-        if (!date_registered.isEmpty()) columns.put("date_registered",date_registered);
-        if (!orders_amount.isEmpty()) columns.put("orders_amount",orders_amount);
-        if (!birthdate.isEmpty()) columns.put("birthdate",birthdate);
-        if (!login.isEmpty()) columns.put("login",login);
-        if (!email.isEmpty()) columns.put("email",email);
-        if (!order.isEmpty()) columns.put("\"order\"",order);
-        return clientDAO.updateById(client_id,columns);
+    public void updateClient(long id,
+                             String firstname,
+                             String lastname,
+                             String patronymic,
+                             Date date_registered,
+                             int orders_amount,
+                             Date birthdate,
+                             String login,
+                             String email,
+                             long order) {
+
+        Client client = new Client(id,
+                firstname,
+                lastname,
+                patronymic,
+                date_registered,
+                orders_amount,
+                birthdate,
+                login,
+                email,
+                order,
+                null);
+
+        clientDAO.updateById(id,client);
     }
 
     @Override
-    public Long insert(ClientEntity client, boolean getID) {
+    public Long insert(Client client, boolean getID) {
         return clientDAO.insert(client, getID);
     }
 
     @Override
-    public boolean delete(Long id) {
-        if (clientDAO.deleteById(id)) {
-            return true;
-        }
-        return false;
+    public void delete(Long id) {
+        clientDAO.deleteById(id);
     }
 
     @Override
-    public ClientEntity getClient(Long id) {
-        ClientEntity client = clientDAO.getById(id);
+    public Client getClient(Long id) {
+        Client client = clientDAO.getById(id);
         return client;
     }
 
@@ -98,7 +96,7 @@ public class ClientService implements IClientService {
         HashMap<Long,String> map = new HashMap<>();
         Iterator<Long> it = IDs.iterator();
         Long id;
-        ClientEntity client;
+        Client client;
         logger.warn(IDs);
         while (it.hasNext()) {
             id = it.next();
@@ -110,17 +108,17 @@ public class ClientService implements IClientService {
 
 
     @Override
-    public List<ClientEntity> getAll() {
+    public List<Client> getAll() {
         return clientDAO.getAll();
     }
 
     @Override
-    public boolean updateOrder(Long client_id, Long order_id) {
-        if (clientDAO.updateOrder(client_id,order_id)) return true;
-        return false;
+    public void updateOrder(Long client_id, Long order_id) {
+        clientDAO.updateOrder(client_id,order_id);
+
     }
     @Override
-    public boolean increaseOrdersCount(Long client_id) {
-        return clientDAO.increaseOrdersCount(client_id);
+    public void increaseOrdersCount(Long client_id) {
+        clientDAO.increaseOrdersCount(client_id);
     }
 }

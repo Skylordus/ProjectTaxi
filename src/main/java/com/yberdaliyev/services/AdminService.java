@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -34,42 +35,43 @@ public class AdminService implements IAdminService {
 
     @Secured({"ROLE_ADMIN"})
     @Override
-    public Admin generateAdmin(String id,
-                                 String firstname,
-                                 String lastname,
-                                 String patronymic,
-                                 String birthdate,
-                                 String login,
-                                 String email) {
+    public Admin generateAdmin(long id,
+                               String firstname,
+                               String lastname,
+                               String patronymic,
+                               Date birthdate,
+                               String login,
+                               String email) {
         Admin admin = new Admin();
-        admin.setId(Long.parseLong(id));
+        admin.setId(id);
         admin.setFirstname(firstname);
         admin.setLogin(login);
         admin.setLastname(lastname);
         admin.setPatronymic(patronymic);
-        admin.setBirthdate(Date.valueOf(birthdate));
+        admin.setBirthdate(birthdate);
         admin.setEmail(email);
         return admin;
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public boolean updateAdmin(String id,
-                                String firstname,
-                                String lastname,
-                                String patronymic,
-                                String birthdate,
-                                String login,
-                                String email) {
-        long admin_id = Long.parseLong(id);
-        Properties columns = new Properties();
-        if (!firstname.isEmpty()) columns.put("firstname",firstname);
-        if (!lastname.isEmpty()) columns.put("lastname",lastname);
-        if (!patronymic.isEmpty()) columns.put("patronymic",patronymic);
-        if (!birthdate.isEmpty()) columns.put("birthdate",birthdate);
-        if (!login.isEmpty()) columns.put("login",login);
-        if (!email.isEmpty()) columns.put("email",email);
-        return adminDAO.updateById(admin_id,columns);
+    public void updateAdmin(long id,
+                               String firstname,
+                               String lastname,
+                               String patronymic,
+                               Date birthdate,
+                               String login,
+                               String email) {
+
+        Admin admin = new Admin(id,
+                firstname,
+                lastname,
+                patronymic,
+                birthdate,
+                login,
+                email,
+                "");
+        adminDAO.updateById(id,admin);
     }
 
     @Override
@@ -79,16 +81,13 @@ public class AdminService implements IAdminService {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public boolean delete(Long id) {
-        if (adminDAO.deleteById(id)) {
-            return true;
-        }
-        return false;
+    public void delete(Long id) {
+        adminDAO.deleteById(id);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public ArrayList<Admin> getAll() {
+    public List<Admin> getAll() {
         return adminDAO.getAll();
     }
 

@@ -2,9 +2,9 @@ package com.yberdaliyev.models.pojos;
 
 public abstract class User {
 
-  public abstract Long getId();
+  public abstract long getId();
 
-  public abstract void setId(Long id);
+  public abstract void setId(long id);
 
   public abstract String getFirstname();
 

@@ -5,6 +5,7 @@ import com.yberdaliyev.models.pojos.Driver;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -13,8 +14,8 @@ import java.util.Properties;
 
 public interface ICarDAO {
     Long insert(Car Car, boolean getID);
-    ArrayList<Car> getAll();
-    boolean updateById(Long id, Properties columns);
-    boolean deleteById(Long id);
+    List<Car> getAll();
+    void updateById(Long id, Car car);
+    void deleteById(Long id);
     Car getById(long id);
 }

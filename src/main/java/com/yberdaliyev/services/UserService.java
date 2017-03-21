@@ -58,7 +58,7 @@ public class UserService implements IUserService {
         User user = null;
 
         if (user_role.equals(ROLE_CLIENT)) {
-            user = new ClientEntity();
+            user = new Client();
         } else if (user_role.equals(ROLE_DRIVER)) {
             user = new Driver();
         } else if (user_role.equals(ROLE_ADMIN)) {
@@ -74,14 +74,14 @@ public class UserService implements IUserService {
         user.setEmail( user_email );
 
         if (user_role.equals(ROLE_CLIENT)) {
-            ClientEntity client = (ClientEntity) user;
+            Client client = (Client) user;
             client.setDate_registered(new Date(new java.util.Date().getTime()));
             client.setOrders_amount(0);
             IClientDAO.insert(client,false);
         } else if (user_role.equals(ROLE_DRIVER)) {
             Driver driver = (Driver) user;
             driver.setCar((long)0);
-            driver.setExperience_years((long)0);
+            driver.setExperience_years(0);
             IDriverDAO.insert(driver,false);
         } else if (user_role.equals(ROLE_ADMIN)) {
             Admin admin = (Admin) user;

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -28,13 +29,13 @@ public class CarService implements ICarService {
     }
 
     @Override
-    public Car generateCar(String id,
+    public Car generateCar(long id,
                            String manufacturer,
                            String model,
                            String regnum,
                            String color) {
         Car car = new Car();
-        car.setId(Long.parseLong(id));
+        car.setId(id);
         car.setManufacturer(manufacturer);
         car.setModel(model);
         car.setRegnum(regnum);
@@ -43,18 +44,18 @@ public class CarService implements ICarService {
     }
 
     @Override
-    public boolean updateCar(String id,
+    public void updateCar(long id,
                              String manufacturer,
                              String model,
                              String regnum,
                              String color) {
-        long car_id = Long.parseLong(id);
-        Properties columns = new Properties();
-        if (!manufacturer.isEmpty()) columns.put("manufacturer",manufacturer);
-        if (!model.isEmpty()) columns.put("model",model);
-        if (!regnum.isEmpty()) columns.put("regnum",regnum);
-        if (!color.isEmpty()) columns.put("color",color);
-        return carDAO.updateById(car_id,columns);
+
+        Car car = new Car(id,
+                manufacturer,
+                model,
+                regnum,
+                color);
+        carDAO.updateById(id,car);
     }
 
     @Override
@@ -63,15 +64,12 @@ public class CarService implements ICarService {
     }
 
     @Override
-    public boolean delete(Long id) {
-        if (carDAO.deleteById(id)) {
-            return true;
-        }
-        return false;
+    public void delete(Long id) {
+        carDAO.deleteById(id);
     }
 
     @Override
-    public ArrayList<Car> getAll() {
+    public List<Car> getAll() {
         return carDAO.getAll();
     }
 }

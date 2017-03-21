@@ -1,10 +1,21 @@
 package com.yberdaliyev.models.pojos;
 
+import com.yberdaliyev.models.enums.USER_ROLES;
+
 public class MyUserDetails {
   private String login;
   private String pwd;
-  private String role;
+  private USER_ROLES role;
   private boolean enabled;
+
+  public MyUserDetails() {}
+
+  public MyUserDetails(String login, String pwd, USER_ROLES role, boolean enabled) {
+    this.login = login;
+    this.pwd = pwd;
+    this.role = role;
+    this.enabled = enabled;
+  }
 
   public String getLogin() {
     return login;
@@ -22,11 +33,11 @@ public class MyUserDetails {
     this.pwd = pwd;
   }
 
-  public String getRole() {
+  public USER_ROLES getRole() {
     return role;
   }
 
-  public void setRole(String role) {
+  public void setRole(USER_ROLES role) {
     this.role = role;
   }
 

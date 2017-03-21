@@ -1,34 +1,54 @@
 package com.yberdaliyev.models.entities;
 
+import com.yberdaliyev.models.pojos.Client;
 import com.yberdaliyev.models.pojos.User;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Table(name = "clients", schema = "main")
-public class ClientEntity extends User {
+public class ClientEntity {
   @Id
   @GeneratedValue
-  private Long id;
+  private long id;
   private String firstname;
   private String lastname;
   private String patronymic;
   private java.sql.Date date_registered;
-  private Integer orders_amount;
+  private int orders_amount;
   private java.sql.Date birthdate;
-  private String login;
+
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+  @JoinColumn(name = "login",referencedColumnName = "login")
+  private LoginEntity login;
+
   private String email;
+
   @Column(name = "\"order\"")
-  private Long order;
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "\"order\"",referencedColumnName = "id")
+  private OrderEntity order;
 
-  @Transient
-  private String pwd;
+  public ClientEntity() {}
 
-  public Long getId() {
+  public ClientEntity(String firstname, String lastname, String patronymic, Date date_registered, int orders_amount, Date birthdate, LoginEntity login, String email, OrderEntity order) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.patronymic = patronymic;
+    this.date_registered = date_registered;
+    this.orders_amount = orders_amount;
+    this.birthdate = birthdate;
+    this.login = login;
+    this.email = email;
+    this.order = order;
+  }
+
+  public long getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(long id) {
     this.id = id;
   }
 
@@ -56,43 +76,35 @@ public class ClientEntity extends User {
     this.patronymic = patronymic;
   }
 
-  public java.sql.Date getDate_registered() {
+  public Date getDate_registered() {
     return date_registered;
   }
 
-  public void setDate_registered(java.sql.Date date_registered) {
+  public void setDate_registered(Date date_registered) {
     this.date_registered = date_registered;
   }
 
-  public Integer getOrders_amount() {
+  public int getOrders_amount() {
     return orders_amount;
   }
 
-  public void setOrders_amount(Integer orders_amount) {
+  public void setOrders_amount(int orders_amount) {
     this.orders_amount = orders_amount;
   }
 
-  public String getPwd() {
-    return pwd;
-  }
-
-  public void setPwd(String pwd) {
-    this.pwd = pwd;
-  }
-
-  public java.sql.Date getBirthdate() {
+  public Date getBirthdate() {
     return birthdate;
   }
 
-  public void setBirthdate(java.sql.Date birthdate) {
+  public void setBirthdate(Date birthdate) {
     this.birthdate = birthdate;
   }
 
-  public String getLogin() {
+  public LoginEntity getLogin() {
     return login;
   }
 
-  public void setLogin(String login) {
+  public void setLogin(LoginEntity login) {
     this.login = login;
   }
 
@@ -104,11 +116,11 @@ public class ClientEntity extends User {
     this.email = email;
   }
 
-  public Long getOrder() {
+  public OrderEntity getOrder() {
     return order;
   }
 
-  public void setOrder(Long order) {
+  public void setOrder(OrderEntity order) {
     this.order = order;
   }
 }

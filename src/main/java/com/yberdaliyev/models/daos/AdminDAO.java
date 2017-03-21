@@ -1,144 +1,96 @@
 package com.yberdaliyev.models.daos;
 
 import com.yberdaliyev.models.connectors.Connector;
+import com.yberdaliyev.models.entities.AdminEntity;
+import com.yberdaliyev.models.entities.LoginEntity;
+import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.pojos.Admin;
 import com.yberdaliyev.models.pojos.Driver;
+import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
+import com.yberdaliyev.models.transformers.PojoToEntityTransformer;
 import org.apache.log4j.Logger;
 import org.postgresql.util.PSQLException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Repository
+@Transactional
 public class AdminDAO implements IAdminDAO {
 
     private static Logger logger = Logger.getLogger(AdminDAO.class);
 
-    private IUserDAO userDAO;
-    public AdminDAO(IUserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
+    private EntityToPojoTransformer entityToPojo;
+    private PojoToEntityTransformer pojoToEntity;
 
-    private static final String SQL_INSERT_ADMIN = "INSERT INTO main.admins " +
-                                                   "(firstname,lastname,patronymic,birthdate,login,email) "+
-                                                   "values (?,?,?,?,?,?)";
-    private static final String SQL_SELECT_ID = "SELECT * FROM main.admins " +
-                                                "WHERE id=?";
-    private static final String SQL_SELECT_MAXID = "SELECT max(id) FROM main.admins;";
-    private static final String SQL_GET_ALL_ADMINS = "SELECT * FROM main.admins ORDER BY id ASC";
-    private static final String SQL_UPDATE_ADMIN = "UPDATE main.admins SET ";
-    private static final String SQL_DELETE_ADMIN = "DELETE FROM main.admins WHERE id=?;";
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Autowired
+    public void setEntityToPojo(EntityToPojoTransformer entityToPojo) {this.entityToPojo = entityToPojo;}
+    @Autowired
+    public void setPojoToEntity(PojoToEntityTransformer pojoToEntity) {this.pojoToEntity = pojoToEntity;}
 
     @Override
     public Long insert(Admin admin, boolean getID) {
-        try (PreparedStatement prepS = userDAO.insert(SQL_INSERT_ADMIN, admin) ) {
-            if (prepS.executeUpdate() > 0) {
-                if (!getID) return (long) -1;
-                Connection conn = Connector.getConnection();
-                ResultSet rs = conn.prepareStatement(SQL_SELECT_MAXID).executeQuery();
-                rs.next();
-                Long id = rs.getLong("max");
-                return id;
-            }
-        } catch (PSQLException e) {
-            logger.trace(e.getCause());
-            logger.error("PSQL exc. in insert admin method",e);
-        } catch (SQLException e) {
-            logger.error("SQL exc. in insert admin method",e);
-        }
-        return null;
+        logger.warn("trying to insert a new admin");
+        AdminEntity adminEntity = pojoToEntity.toAdminEntity(admin);
+        logger.warn("inserting LOGIN first");
+        LoginEntity loginEntity = new LoginEntity(admin.getLogin(),
+                                                  admin.getPwd(),
+                                                  USER_ROLES.ROLE_ADMIN,
+                                                  true);
+        manager.persist(loginEntity);
+        manager.persist(adminEntity);
+        logger.warn("inserting a new admin with ID="+adminEntity.getId());
+        if (getID) {return adminEntity.getId();}
+        else return 0L;
     }
 
     @Override
     public Admin getById(long id) {
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(SQL_SELECT_ID)) {
-            prepS.setLong(1,id);
-            ResultSet resultSet = prepS.executeQuery();
-            Admin admin = new Admin();
-            resultSet.next();
-            userDAO.setFields(admin,resultSet);
-            return admin;
-        } catch (SQLException e ) {
-            logger.error("error",e);
-        }
-        return null;
+        logger.warn("getting admin by ID="+id);
+        AdminEntity adminEntity = manager.find(AdminEntity.class, id);
+        if (adminEntity == null) return null;
+        return entityToPojo.toAdmin(adminEntity);
     }
 
     @Override
-    public ArrayList<Admin> getAll() {
-        Admin admin;
-        ArrayList<Admin> admins = new ArrayList<>();
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(SQL_GET_ALL_ADMINS) ) {
-            ResultSet resultSet = prepS.executeQuery();
-            while (resultSet.next()){
-                admin = new Admin();
-                admin.setId(resultSet.getLong("id"));
-                admin.setFirstname(resultSet.getString("firstname"));
-                admin.setLastname(resultSet.getString("lastname"));
-                admin.setPatronymic(resultSet.getString("patronymic"));
-                admin.setBirthdate(resultSet.getDate("birthdate"));
-                admin.setLogin(resultSet.getString("login"));
-                admin.setEmail(resultSet.getString("email"));
-                admins.add(admin);
-            }
-        } catch (SQLException e) {
-            logger.error("sql error in get all admins",e);
+    public List<Admin> getAll() {
+        logger.warn("getting all admins");
+        List<AdminEntity> adminEntities = manager.createQuery("Select a From AdminEntity a", AdminEntity.class).getResultList();
+
+        List<Admin> admins = new ArrayList<>();
+        for (AdminEntity adminEntity : adminEntities) {
+            admins.add(entityToPojo.toAdmin(adminEntity));
         }
         return admins;
     }
 
     @Override
-    public boolean updateById(Long id, Properties columns) {
-        if (columns.isEmpty()) {
-            logger.warn("empty update admin request");
-            return true;
-        }
-        String query = SQL_UPDATE_ADMIN;
-        for (String key : columns.stringPropertyNames()) {
-            query += key+"="+"?, ";
-        }
-        query = query.substring(0,query.length()-2);
-        query += " WHERE id="+id+";";
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(query)) {
-            int i = 1;
-            for (String key : columns.stringPropertyNames()) {
-                switch (key) {
-                    default:
-                        prepS.setString(i,columns.getProperty(key));
-                        i++;
-                        break;
-                    case "birthdate":
-                        prepS.setDate(i, Date.valueOf(columns.getProperty(key)));
-                        i++;
-                }
-            }
-            logger.warn(prepS);
-            if (prepS.executeUpdate()>0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("sql error in adminDAO.updatebyId() method",e);
-        }
-        return false;
+    public void updateById(Long id, Admin admin) {
+        logger.warn("trying to update a admin with id="+id);
+        AdminEntity adminEntity = manager.find(AdminEntity.class, id);
+        if (admin.getFirstname() != null) adminEntity.setFirstname(admin.getFirstname());
+        if (admin.getLastname() != null) adminEntity.setLastname(admin.getLastname());
+        if (admin.getPatronymic() != null) adminEntity.setPatronymic(admin.getPatronymic());
+        if (admin.getEmail() != null) adminEntity.setEmail(admin.getEmail());
+        if (admin.getBirthdate() != null) adminEntity.setBirthdate(admin.getBirthdate());
+        if (admin.getLogin() != null) adminEntity.setLogin(admin.getLogin());
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        try (Connection conn = Connector.getConnection();
-             PreparedStatement prepS = conn.prepareStatement(SQL_DELETE_ADMIN)) {
-            prepS.setLong(1,id);
-            if (prepS.executeUpdate()>0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("sql error in adminDAO.deleteById() method",e);
-        }
-        return false;
+    public void deleteById(Long id) {
+        logger.warn("deleting client with id="+id);
+        AdminEntity adminEntity = manager.find(AdminEntity.class, id);
+        manager.remove(adminEntity);
     }
 }

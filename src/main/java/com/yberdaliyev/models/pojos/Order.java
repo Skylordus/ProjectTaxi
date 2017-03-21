@@ -1,23 +1,38 @@
 package com.yberdaliyev.models.pojos;
 
+
 import java.sql.Time;
 
 public class Order {
-  private Long id;
+  private long id;
   private String from;
   private String to;
-  private Long price_per_km;
+  private int price_per_km;
   private Time pickup_time;
-  private Long client;
-  private Long driver;
-  private Long status;
+  private Client client;
+  private Driver driver;
+  private int status;
 
 
-  public Long getId() {
+
+  public Order() {}
+
+  public Order(long id, String from, String to, int price_per_km, Time pickup_time, Client client, Driver driver, int status) {
+    this.id = id;
+    this.from = from;
+    this.to = to;
+    this.price_per_km = price_per_km;
+    this.pickup_time = pickup_time;
+    this.client = client;
+    this.driver = driver;
+    this.status = status;
+  }
+
+  public long getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(long id) {
     this.id = id;
   }
 
@@ -37,36 +52,12 @@ public class Order {
     this.to = to;
   }
 
-  public Long getPrice_per_km() {
+  public int getPrice_per_km() {
     return price_per_km;
   }
 
-  public void setPrice_per_km(Long price_per_km) {
+  public void setPrice_per_km(int price_per_km) {
     this.price_per_km = price_per_km;
-  }
-
-  public Long getClient() {
-    return client;
-  }
-
-  public void setClient(Long client) {
-    this.client = client;
-  }
-
-  public Long getDriver() {
-    return driver;
-  }
-
-  public void setDriver(Long driver) {
-    this.driver = driver;
-  }
-
-  public Long getStatus() {
-    return status;
-  }
-
-  public void setStatus(Long status) {
-    this.status = status;
   }
 
   public Time getPickup_time() {
@@ -77,4 +68,27 @@ public class Order {
     this.pickup_time = pickup_time;
   }
 
+  public Client getClient() {
+    return client;
+  }
+
+  public void setClient(Client client) {
+    this.client = client;
+  }
+
+  public Driver getDriver() {
+    return driver;
+  }
+
+  public void setDriver(Driver driver) {
+    this.driver = driver;
+  }
+
+  public int getStatus() {
+    return status;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
+  }
 }

@@ -16,15 +16,16 @@ import java.util.Properties;
  */
 
 public interface IOrderDAO {
-    boolean deleteById(Long id);
 
-    boolean updateById(Long id, Properties columns);
+    void deleteById(Long id);
+
+    void updateById(Long id, Order order);
 
     Long insert(Order order, boolean getID);
 
     Order getById(long id);
 
-    ArrayList<Order> getAll();
+    List<Order> getAll();
 
-    ArrayList<Order> getFreeOrders();
+    List<Order> getFreeOrders();
 }

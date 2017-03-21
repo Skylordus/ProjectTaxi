@@ -4,6 +4,7 @@ import com.yberdaliyev.models.pojos.Admin;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -13,8 +14,8 @@ import java.util.Properties;
 public interface IAdminDAO {
 
     Long insert(Admin admin, boolean getID);
-    ArrayList<Admin> getAll();
-    boolean updateById(Long id, Properties columns);
-    boolean deleteById(Long id);
+    List<Admin> getAll();
+    void updateById(Long id, Admin admin);
+    void deleteById(Long id);
     Admin getById(long id);
 }

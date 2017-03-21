@@ -4,6 +4,7 @@ import com.yberdaliyev.models.pojos.Car;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yerlan on 02.03.2017.
@@ -11,19 +12,19 @@ import java.util.ArrayList;
 
 public interface ICarService {
     Car getCar(Long id);
-    Car generateCar(String id,
+    Car generateCar(long id,
                     String manufacturer,
                     String model,
                     String regnum,
                     String color);
 
-    boolean updateCar(String id,
+    void updateCar(long id,
                       String manufacturer,
                       String model,
                       String regnum,
                       String color);
 
     Long insert(Car car, boolean getID);
-    boolean delete(Long id);
-    ArrayList<Car> getAll();
+    void delete(Long id);
+    List<Car> getAll();
 }
