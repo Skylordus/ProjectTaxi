@@ -1,15 +1,16 @@
 package com.yberdaliyev.models.pojos;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 public class Client extends User{
-  private long id;
+  private Long id;
   private String firstname;
   private String lastname;
   private String patronymic;
-  private java.sql.Date date_registered;
-  private int orders_amount;
-  private java.sql.Date birthdate;
+  private Date date_registered;
+  private Integer orders_amount;
+  private Date birthdate;
   private String login;
   private String email;
   private Order order;
@@ -18,7 +19,7 @@ public class Client extends User{
 
   public Client() {}
 
-  public Client(long id, String firstname, String lastname, String patronymic, Date date_registered, int orders_amount, Date birthdate, String login, String email, Order order, String pwd) {
+  public Client(Long id, String firstname, String lastname, String patronymic, Date date_registered, Integer orders_amount, Date birthdate, String login, String email, Order order, String pwd) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
@@ -33,12 +34,12 @@ public class Client extends User{
   }
 
   @Override
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
   @Override
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -80,11 +81,11 @@ public class Client extends User{
     this.date_registered = date_registered;
   }
 
-  public int getOrders_amount() {
+  public Integer getOrders_amount() {
     return orders_amount;
   }
 
-  public void setOrders_amount(int orders_amount) {
+  public void setOrders_amount(Integer orders_amount) {
     this.orders_amount = orders_amount;
   }
 
@@ -135,4 +136,6 @@ public class Client extends User{
   public void setPwd(String pwd) {
     this.pwd = pwd;
   }
+
 }
+

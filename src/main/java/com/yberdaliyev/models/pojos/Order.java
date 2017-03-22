@@ -1,23 +1,23 @@
 package com.yberdaliyev.models.pojos;
 
 
-import java.sql.Time;
+import java.util.Date;
 
 public class Order {
-  private long id;
+  private Long id;
   private String from;
   private String to;
-  private int price_per_km;
-  private Time pickup_time;
+  private Integer price_per_km;
+  private Date pickup_time;
   private Client client;
   private Driver driver;
-  private int status;
+  private Integer status;
 
 
 
   public Order() {}
 
-  public Order(long id, String from, String to, int price_per_km, Time pickup_time, Client client, Driver driver, int status) {
+  public Order(Long id, String from, String to, Integer price_per_km, Date pickup_time, Client client, Driver driver, Integer status) {
     this.id = id;
     this.from = from;
     this.to = to;
@@ -28,11 +28,11 @@ public class Order {
     this.status = status;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -52,19 +52,19 @@ public class Order {
     this.to = to;
   }
 
-  public int getPrice_per_km() {
+  public Integer getPrice_per_km() {
     return price_per_km;
   }
 
-  public void setPrice_per_km(int price_per_km) {
+  public void setPrice_per_km(Integer price_per_km) {
     this.price_per_km = price_per_km;
   }
 
-  public Time getPickup_time() {
+  public Date getPickup_time() {
     return pickup_time;
   }
 
-  public void setPickup_time(Time pickup_time) {
+  public void setPickup_time(Date pickup_time) {
     this.pickup_time = pickup_time;
   }
 
@@ -84,11 +84,11 @@ public class Order {
     this.driver = driver;
   }
 
-  public int getStatus() {
+  public Integer getStatus() {
     return status;
   }
 
-  public void setStatus(int status) {
+  public void setStatus(Integer status) {
     this.status = status;
   }
 }

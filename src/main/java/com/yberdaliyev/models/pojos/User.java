@@ -1,10 +1,12 @@
 package com.yberdaliyev.models.pojos;
 
+import java.util.Date;
+
 public abstract class User {
 
-  public abstract long getId();
+  public abstract Long getId();
 
-  public abstract void setId(long id);
+  public abstract void setId(Long id);
 
   public abstract String getFirstname();
 
@@ -18,9 +20,9 @@ public abstract class User {
 
   public abstract void setPatronymic(String patronymic);
 
-  public abstract java.sql.Date getBirthdate();
+  public abstract Date getBirthdate();
 
-  public abstract void setBirthdate(java.sql.Date birthdate);
+  public abstract void setBirthdate(Date birthdate);
 
   public abstract String getPwd();
 

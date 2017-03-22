@@ -63,29 +63,32 @@ public class DriverServlet {
         logger.warn("Order ID: " + order_id);
         ModelAndView modelAndView = new ModelAndView("driver_account");
         Driver driver = (Driver) session.getAttribute("user_object");
-        Long driver_id = driver.getId();
+        Order order = new Order();
+        order.setId(order_id);
+        order.setDriver(driver);
 
         if ( type.equals("pick") ) {
             String status = String.valueOf(OrderService.STATUS_NOT_STARTED);
+
             orderService.updateOrder(order_id,
                     "",
                     "",
-                    0,
-                    0L,
-                    driver_id,
+                    null,
+                    null,
+                    driver,
                     0,
                     null);
 
-            driverService.updateDriver(driver_id,
+            driverService.updateDriver(driver.getId(),
                     "",
                     "",
                     "",
-                    0,
-                    0L,
+                    null,
+                    null,
                     null,
                     "",
                     "",
-                    order_id);
+                    order);
         } else
         if ( type.equals("on_execution") ) {
             orderService.setStatus(order_id,OrderService.STATUS_FULFILLING);
@@ -95,7 +98,7 @@ public class DriverServlet {
             order_id = 0L;
             clientService.increaseOrdersCount(client_id);
         }
-        driver.setOrder(order_id);
+        driver.setOrder(order);
         session.setAttribute("user_object", driver);
         return doGet(session);
     }
@@ -106,25 +109,21 @@ public class DriverServlet {
         logger.warn("on doGet DriverServlet");
         ModelAndView modelAndView = new ModelAndView("driver_account");
         Driver driver = (Driver) session.getAttribute("user_object");
-        Long orderID = driver.getOrder();
 
         boolean showOrder = false;
-        Order order = null;
-        if (orderID!=null) {
-           if (orderID!=0) {
-               order = orderService.getOrder(orderID);
-               if ( (order.getStatus()!=OrderService.STATUS_FINISHED)&&(order.getStatus()!=OrderService.STATUS_NO_DRIVER)) {
-                   showOrder=true;
-               }
-           }
+        Order order = driver.getOrder();
+        if (order!=null) {
+            if ( (order.getStatus()!=OrderService.STATUS_FINISHED)&&(order.getStatus()!=OrderService.STATUS_NO_DRIVER)) {
+                showOrder=true;
+            }
         }
 
         if (showOrder) {
             modelAndView.addObject("your_order",order);
-            Client client = clientService.getClient(order.getClient());
+            Client client = order.getClient();
             String clientName = client.getFirstname()+" "+client.getPatronymic()+" "+client.getLastname();
             modelAndView.addObject("client",clientName);
-            Car car = carService.getCar(driver.getCar());
+            Car car = driver.getCar();
             String carName = "No car";
             if (car!=null) carName = car.toString();
             modelAndView.addObject("car",carName);
@@ -133,12 +132,12 @@ public class DriverServlet {
         } else {
             List<Order> orders = orderService.getFreeOrders();
             modelAndView.addObject("orders",orders);
-            List<Long> list = new ArrayList<>();
-            for (Order o:orders) {
-                list.add(o.getClient());
-            }
-            HashMap clients = clientService.getClientNamesMappedById(list);
-            modelAndView.addObject("clients",clients);
+//            List<Long> list = new ArrayList<>();
+//            for (Order o:orders) {
+//                list.add(o.getClient());
+//            }
+//            HashMap clients = clientService.getClientNamesMappedById(list);
+//            modelAndView.addObject("clients",clients);
             modelAndView.addObject("isPicked",false);
         }
         return modelAndView;

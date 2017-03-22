@@ -98,7 +98,7 @@
 
 										</td>
 										<td>
-											<div>${clients.get(order.getClient())}</div>
+											<div>${order.getClient()}</div>
 										</td>
 										<td>
 											<div>${order.getPickup_time().toString()}</div>

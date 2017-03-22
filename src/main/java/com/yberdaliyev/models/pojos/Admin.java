@@ -1,18 +1,19 @@
 package com.yberdaliyev.models.pojos;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 public class Admin extends User {
-  private long id;
+  private Long id;
   private String firstname;
   private String lastname;
   private String patronymic;
-  private java.sql.Date birthdate;
+  private Date birthdate;
   private String login;
   private String email;
   private String pwd;
 
-  public Admin(long id, String firstname, String lastname, String patronymic, Date birthdate, String login, String email, String pwd) {
+  public Admin(Long id, String firstname, String lastname, String patronymic, Date birthdate, String login, String email, String pwd) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
@@ -25,11 +26,11 @@ public class Admin extends User {
 
   public Admin() {}
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -57,11 +58,11 @@ public class Admin extends User {
     this.patronymic = patronymic;
   }
 
-  public java.sql.Date getBirthdate() {
+  public Date getBirthdate() {
     return birthdate;
   }
 
-  public void setBirthdate(java.sql.Date birthdate) {
+  public void setBirthdate(Date birthdate) {
     this.birthdate = birthdate;
   }
 

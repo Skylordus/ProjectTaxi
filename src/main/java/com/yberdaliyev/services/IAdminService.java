@@ -29,7 +29,7 @@ public interface IAdminService {
                          String login,
                          String email);
 
-    Long insert(Admin admin, boolean getID);
+    Long insert(Admin admin);
     void delete(Long id);
     List<Admin> getAll();
 }

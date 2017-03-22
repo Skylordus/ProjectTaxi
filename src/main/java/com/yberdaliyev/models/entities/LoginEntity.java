@@ -16,7 +16,7 @@ public class LoginEntity {
     private String pwd;
     @Enumerated(EnumType.STRING)
     private USER_ROLES role;
-    private boolean enabled = true;
+    private boolean enabled;
 
     @OneToOne(mappedBy = "login", targetEntity = AdminEntity.class, cascade = CascadeType.ALL)
     private AdminEntity admin;
@@ -24,6 +24,9 @@ public class LoginEntity {
     private ClientEntity client;
     @OneToOne(mappedBy = "login", targetEntity = DriverEntity.class, cascade = CascadeType.ALL)
     private DriverEntity driver;
+
+    @Version
+    private Long version;
 
     public LoginEntity(){}
 

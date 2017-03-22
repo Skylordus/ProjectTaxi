@@ -1,29 +1,29 @@
 package com.yberdaliyev.models.pojos;
 
 public class Car {
-  private long id;
+  private Long id;
   private String manufacturer;
   private String model;
   private String regnum;
   private String color;
   private Driver driver;
 
-  public Car(long id, String manufacturer, String model, String regnum, String color, Driver driver) {
+  public Car(Long id, String manufacturer, String model, String regnum, String color, Driver driver) {
     this.id = id;
     this.manufacturer = manufacturer;
     this.model = model;
     this.regnum = regnum;
     this.color = color;
-    this.driver = driver;
+
   }
 
   public Car() {}
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

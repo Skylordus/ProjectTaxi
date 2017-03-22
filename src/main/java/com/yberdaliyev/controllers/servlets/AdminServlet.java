@@ -73,14 +73,21 @@ public class AdminServlet {
         logger.warn("on tableOrders AdminServlet");
         ModelAndView modelAndView = new ModelAndView("admin_account");
         modelAndView.addObject("showtable",1);
+
+        Client client = new Client();
+        client.setId(form.getClient_id());
+        Driver driver = new Driver();
+        driver.setId(form.getDriver_id());
+
         if (type==null) {} else
         if (type.equals("edit")) {
+
             orderService.updateOrder(form.getId(),
                     form.getFrom(),
                     form.getTo(),
                     form.getPrice(),
-                    form.getClient_id(),
-                    form.getDriver_id(),
+                    client,
+                    driver,
                     form.getStatus(),
                     form.getPickup_time());
         } else
@@ -88,12 +95,12 @@ public class AdminServlet {
             orderService.delete(form.getId());
         } else
         if (type.equals("add")) {
-            Order order = orderService.generateOrder(0L,
+            Order order = orderService.generateOrder(null,
                     form.getFrom(),
                     form.getTo(),
                     form.getPrice(),
-                    form.getClient_id(),
-                    form.getDriver_id(),
+                    client,
+                    driver,
                     form.getStatus(),
                     form.getPickup_time());
         }
@@ -109,6 +116,9 @@ public class AdminServlet {
         ModelAndView modelAndView = new ModelAndView("admin_account");
         modelAndView.addObject("showtable",2);
 
+        Order order = new Order();
+        order.setId(form.getOrder());
+
         if (type==null) {} else
         if (type.equals("edit")) {
             clientService.updateClient(form.getId(),
@@ -120,13 +130,13 @@ public class AdminServlet {
                     form.getBirthdate(),
                     form.getLogin(),
                     form.getEmail(),
-                    form.getOrder());
+                    order);
         } else
         if (type.equals("delete")) {
             clientService.delete(form.getId());
         } else
         if (type.equals("add")) {
-            Client client = clientService.generateClient(0L,
+            Client client = clientService.generateClient(null,
                     form.getFirstname(),
                     form.getLastname(),
                     form.getPatronymic(),
@@ -135,9 +145,9 @@ public class AdminServlet {
                     form.getBirthdate(),
                     form.getLogin(),
                     form.getEmail(),
-                    form.getOrder());
+                    order);
             client.setPwd(form.getPwd());
-            clientService.insert(client, false);
+            clientService.insert(client);
         }
 
         addTablesToModel(modelAndView);
@@ -151,6 +161,11 @@ public class AdminServlet {
         ModelAndView modelAndView = new ModelAndView("admin_account");
         modelAndView.addObject("showtable",3);
 
+        Car car = new Car();
+        car.setId(form.getCar());
+        Order order = new Order();
+        order.setId(form.getOrder());
+
         if (type==null) {} else
         if (type.equals("edit")) {
             driverService.updateDriver(form.getId(),
@@ -158,11 +173,11 @@ public class AdminServlet {
                     form.getLastname(),
                     form.getPatronymic(),
                     form.getExperience_years(),
-                    form.getCar(),
+                    car,
                     form.getBirthdate(),
                     form.getLogin(),
                     form.getEmail(),
-                    form.getOrder());
+                    order);
 
         } else
         if (type.equals("delete")) {
@@ -170,18 +185,18 @@ public class AdminServlet {
 
         } else
         if (type.equals("add")) {
-            Driver driver = driverService.generateDriver(0L,
+            Driver driver = driverService.generateDriver(null,
                                                         form.getFirstname(),
                                                         form.getLastname(),
                                                         form.getPatronymic(),
                                                         form.getExperience_years(),
-                                                        form.getCar(),
+                                                        car,
                                                         form.getBirthdate(),
                                                         form.getLogin(),
                                                         form.getEmail(),
-                                                        form.getOrder());
+                                                        order);
             driver.setPwd(form.getPwd());
-            driverService.insert(driver, false);
+            driverService.insert(driver);
         }
         addTablesToModel(modelAndView);
         return modelAndView;
@@ -216,7 +231,7 @@ public class AdminServlet {
                     form.getLogin(),
                     form.getEmail());
             admin.setPwd(form.getPwd());
-            adminService.insert(admin, false);
+            adminService.insert(admin);
         }
         addTablesToModel(modelAndView);
         return modelAndView;
@@ -228,14 +243,16 @@ public class AdminServlet {
                                  @ModelAttribute CarTableForm form) {
         ModelAndView modelAndView = new ModelAndView("admin_account");
         modelAndView.addObject("showtable",5);
-
+        Driver driver = new Driver();
+        driver.setId(form.getDriver_id());
         if (type==null) {} else
         if (type.equals("edit")) {
             carService.updateCar(form.getId(),
                     form.getManufacturer(),
                     form.getModel(),
                     form.getRegnum(),
-                    form.getColor());
+                    form.getColor(),
+                    driver);
 
         } else
         if (type.equals("delete")) {
@@ -247,7 +264,7 @@ public class AdminServlet {
                                             form.getModel(),
                                             form.getRegnum(),
                                             form.getColor());
-            carService.insert(car, false);
+            carService.insert(car);
         }
 
         addTablesToModel(modelAndView);

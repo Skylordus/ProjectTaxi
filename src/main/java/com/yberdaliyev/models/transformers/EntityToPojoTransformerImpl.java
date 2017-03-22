@@ -35,7 +35,6 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
 
     @Override
     public Client toClient(ClientEntity clientEntity) {
-        long orderID = (clientEntity.getOrder()==null) ? 0 : clientEntity.getOrder().getId();
 
         return new Client( clientEntity.getId(),
                 clientEntity.getFirstname(),
@@ -46,13 +45,12 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
                 clientEntity.getBirthdate(),
                 clientEntity.getLogin().getLogin(),
                 clientEntity.getEmail(),
-                orderID,
+                toOrder(clientEntity.getOrder()),
                 clientEntity.getLogin().getPwd() );
     }
 
     @Override
     public Driver toDriver(DriverEntity driverEntity) {
-        long orderID = (driverEntity.getOrder()==null) ? 0 : driverEntity.getOrder().getId();
 
         return new Driver( driverEntity.getId(),
                 driverEntity.getExperience_years(),
@@ -63,7 +61,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
                 driverEntity.getBirthdate(),
                 driverEntity.getLogin().getLogin(),
                 driverEntity.getEmail(),
-                orderID,
+                toOrder(driverEntity.getOrder()),
                 driverEntity.getLogin().getPwd());
     }
 

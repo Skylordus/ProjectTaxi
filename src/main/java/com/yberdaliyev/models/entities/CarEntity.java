@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class CarEntity {
   @Id
   @GeneratedValue
-  private long id;
+  private Long id;
   private String manufacturer;
   private String model;
   private String regnum;
@@ -18,6 +18,9 @@ public class CarEntity {
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "driver",referencedColumnName = "id")
   private DriverEntity driver;
+
+  @Version
+  private Long version;
 
   public CarEntity() {}
 
@@ -29,11 +32,11 @@ public class CarEntity {
     this.driver = driver;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

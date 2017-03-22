@@ -4,20 +4,22 @@ import com.yberdaliyev.models.pojos.Client;
 import com.yberdaliyev.models.pojos.User;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "clients", schema = "main")
 public class ClientEntity {
   @Id
   @GeneratedValue
-  private long id;
+  private Long id;
   private String firstname;
   private String lastname;
   private String patronymic;
-  private java.sql.Date date_registered;
-  private int orders_amount;
-  private java.sql.Date birthdate;
+  @Temporal(TemporalType.DATE)
+  private Date date_registered;
+  private Integer orders_amount;
+  @Temporal(TemporalType.DATE)
+  private Date birthdate;
 
   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
   @JoinColumn(name = "login",referencedColumnName = "login")
@@ -25,10 +27,12 @@ public class ClientEntity {
 
   private String email;
 
-  @Column(name = "\"order\"")
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "\"order\"",referencedColumnName = "id")
   private OrderEntity order;
+
+  @Version
+  private Long version;
 
   public ClientEntity() {}
 
@@ -44,11 +48,11 @@ public class ClientEntity {
     this.order = order;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -84,11 +88,11 @@ public class ClientEntity {
     this.date_registered = date_registered;
   }
 
-  public int getOrders_amount() {
+  public Integer getOrders_amount() {
     return orders_amount;
   }
 
-  public void setOrders_amount(int orders_amount) {
+  public void setOrders_amount(Integer orders_amount) {
     this.orders_amount = orders_amount;
   }
 

@@ -3,22 +3,26 @@ package com.yberdaliyev.models.entities;
 import com.yberdaliyev.models.pojos.User;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "admins", schema = "main")
 public class AdminEntity {
   @Id
   @GeneratedValue
-  private long id;
+  private Long id;
   private String firstname;
   private String lastname;
   private String patronymic;
-  private java.sql.Date birthdate;
+  @Temporal(TemporalType.DATE)
+  private Date birthdate;
   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
   @JoinColumn(name = "login",referencedColumnName = "login")
   private LoginEntity login;
   private String email;
+
+  @Version
+  private Long version;
 
   public AdminEntity() {}
 
@@ -36,11 +40,11 @@ public class AdminEntity {
     this.email = email;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

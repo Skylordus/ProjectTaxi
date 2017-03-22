@@ -2,8 +2,15 @@ package com.yberdaliyev.services;
 
 import com.yberdaliyev.models.daos.CarDAO;
 import com.yberdaliyev.models.daos.ICarDAO;
+import com.yberdaliyev.models.entities.CarEntity;
 import com.yberdaliyev.models.pojos.Car;
+import com.yberdaliyev.models.pojos.Driver;
+import com.yberdaliyev.models.repositories.CarRepository;
+import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
+import com.yberdaliyev.models.transformers.PojoToEntityTransformer;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,61 +22,79 @@ import java.util.Properties;
  */
 @Service
 public class CarService implements ICarService {
-
-    private ICarDAO carDAO;
+    private static Logger logger = Logger.getLogger(CarService.class);
+    private CarRepository repository;
+    private EntityToPojoTransformer entityToPojo;
+    private PojoToEntityTransformer pojoToEntity;
 
     @Autowired
-    public CarService(ICarDAO carDAO) {
-        this.carDAO = carDAO;
+    public void setEntityToPojo(EntityToPojoTransformer entityToPojo) {this.entityToPojo = entityToPojo;}
+    @Autowired
+    public void setPojoToEntity(PojoToEntityTransformer pojoToEntity) {this.pojoToEntity = pojoToEntity;}
+    @Autowired
+    public CarService(CarRepository repository) {
+        this.repository = repository;
     }
 
+    @Override
     public Car getCar(Long id) {
-       Car car = carDAO.getById(id);
+        Car car = entityToPojo.toCar(repository.findOne(id));
         return car;
     }
 
     @Override
-    public Car generateCar(long id,
+    public Car generateCar(Long id,
                            String manufacturer,
                            String model,
                            String regnum,
                            String color) {
-        Car car = new Car();
-        car.setId(id);
-        car.setManufacturer(manufacturer);
-        car.setModel(model);
-        car.setRegnum(regnum);
-        car.setColor(color);
+        Car car = new Car(id,
+                manufacturer,
+                model,
+                regnum,
+                color,
+                null);
         return car;
     }
 
     @Override
-    public void updateCar(long id,
+    public void updateCar(Long id,
                              String manufacturer,
                              String model,
                              String regnum,
-                             String color) {
+                             String color,
+                             Driver driver) {
 
         Car car = new Car(id,
                 manufacturer,
                 model,
                 regnum,
-                color);
-        carDAO.updateById(id,car);
+                color,
+                driver);
+
+        repository.save(pojoToEntity.toCarEntity(car));
     }
 
     @Override
-    public Long insert(Car car, boolean getID) {
-        return carDAO.insert(car, getID);
+    public Long insert(Car car) {
+        return repository.save(pojoToEntity.toCarEntity(car)).getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public void delete(Long id) {
-        carDAO.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
     public List<Car> getAll() {
-        return carDAO.getAll();
+        logger.warn("getting all cars");
+        List<CarEntity> carEntities = repository.findAll();
+        List<Car> cars = new ArrayList<>();
+        for (CarEntity carEntity : carEntities) {
+            cars.add(entityToPojo.toCar(carEntity));
+        }
+        return cars;
     }
+
 }

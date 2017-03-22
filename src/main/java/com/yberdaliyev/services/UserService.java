@@ -4,8 +4,12 @@ import com.yberdaliyev.common.exceptions.EmailExistsException;
 import com.yberdaliyev.common.exceptions.LoginExistsException;
 import com.yberdaliyev.models.daos.*;
 import com.yberdaliyev.models.entities.ClientEntity;
+import com.yberdaliyev.models.entities.LoginEntity;
 import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.pojos.*;
+import com.yberdaliyev.models.repositories.*;
+import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
+import com.yberdaliyev.models.transformers.PojoToEntityTransformer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,22 +29,25 @@ import static com.yberdaliyev.models.enums.USER_ROLES.ROLE_DRIVER;
 public class UserService implements IUserService {
 
     private PasswordEncoder encoder;
-
+    private DriverRepository driverRepository;
+    private ClientRepository clientRepository;
+    private AdminRepository adminRepository;
+    private LoginRepository loginRepository;
+    private EntityToPojoTransformer entityToPojo;
+    private PojoToEntityTransformer pojoToEntity;
     static Logger logger = Logger.getLogger(UserService.class);
-
-    private final IUserDAO IUserDAO;
-    private final IAdminDAO IAdminDAO;
-    private final IClientDAO IClientDAO;
-    private final IDriverDAO IDriverDAO;
-
     @Autowired
-    public UserService(IUserDAO IUserDAO, IAdminDAO IAdminDAO, IClientDAO IClientDAO, IDriverDAO IDriverDAO) {
-        this.IUserDAO = IUserDAO;
-        this.IAdminDAO = IAdminDAO;
-        this.IClientDAO = IClientDAO;
-        this.IDriverDAO = IDriverDAO;
-    }
-
+    public void setEntityToPojo(EntityToPojoTransformer entityToPojo) {this.entityToPojo = entityToPojo;}
+    @Autowired
+    public void setPojoToEntity(PojoToEntityTransformer pojoToEntity) {this.pojoToEntity = pojoToEntity;}
+    @Autowired
+    public void setDriverRepository(DriverRepository driverRepository) {this.driverRepository = driverRepository;}
+    @Autowired
+    public void setClientRepository(ClientRepository clientRepository) {this.clientRepository = clientRepository;}
+    @Autowired
+    public void setAdminRepository(AdminRepository adminRepository) {this.adminRepository = adminRepository;}
+    @Autowired
+    public void setLoginRepository(LoginRepository loginRepository) {this.loginRepository = loginRepository;}
     @Autowired
     public void setEncoder(PasswordEncoder encoder) {
         this.encoder = encoder;
@@ -56,7 +63,6 @@ public class UserService implements IUserService {
                          String user_email) throws EmailExistsException, LoginExistsException {
 
         User user = null;
-
         if (user_role.equals(ROLE_CLIENT)) {
             user = new Client();
         } else if (user_role.equals(ROLE_DRIVER)) {
@@ -76,28 +82,35 @@ public class UserService implements IUserService {
         if (user_role.equals(ROLE_CLIENT)) {
             Client client = (Client) user;
             client.setDate_registered(new Date(new java.util.Date().getTime()));
-            client.setOrders_amount(0);
-            IClientDAO.insert(client,false);
+            clientRepository.save(pojoToEntity.toClientEntity(client));
         } else if (user_role.equals(ROLE_DRIVER)) {
             Driver driver = (Driver) user;
-            driver.setCar((long)0);
-            driver.setExperience_years(0);
-            IDriverDAO.insert(driver,false);
+            driverRepository.save(pojoToEntity.toDriverEntity(driver));
         } else if (user_role.equals(ROLE_ADMIN)) {
             Admin admin = (Admin) user;
-            IAdminDAO.insert(admin, false);
+            adminRepository.save(pojoToEntity.toAdminEntity(admin));
         }
 
     }
 
     public User getUserByLoginAndRole(String login, USER_ROLES role) {
-
-        User user = IUserDAO.getByLoginAndRole(login,role);
-
+        User user = null;
+        if (role.equals(ROLE_CLIENT)) {
+            user = entityToPojo.toClient(clientRepository.findByLogin(login));
+        } else if (role.equals(ROLE_DRIVER)) {
+            user = entityToPojo.toDriver(driverRepository.findByLogin(login));
+        } else if (role.equals(ROLE_ADMIN)) {
+            user = entityToPojo.toAdmin(adminRepository.findByLogin(login));
+        }
         return user;
     }
 
     public MyUserDetails getUserDetailsByLogin(String login) {
-        return IUserDAO.getUserDetailsByLogin(login);
+        LoginEntity loginEntity = loginRepository.findOne(login);
+        MyUserDetails userDetails = new MyUserDetails(loginEntity.getLogin(),
+                                                      loginEntity.getPwd(),
+                                                      loginEntity.getRole(),
+                                                      loginEntity.isEnabled());
+        return userDetails;
     }
 }

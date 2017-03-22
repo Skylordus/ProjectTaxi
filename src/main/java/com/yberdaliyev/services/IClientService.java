@@ -2,6 +2,7 @@ package com.yberdaliyev.services;
 
 import com.yberdaliyev.models.entities.ClientEntity;
 import com.yberdaliyev.models.pojos.Client;
+import com.yberdaliyev.models.pojos.Order;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -14,28 +15,28 @@ import java.util.List;
  */
 
 public interface IClientService {
-    Client generateClient(long id,
+    Client generateClient(Long id,
                           String firstname,
                           String lastname,
                           String patronymic,
                           Date date_registered,
-                          int orders_amount,
+                          Integer orders_amount,
                           Date birthdate,
                           String login,
                           String email,
-                          long order);
+                          Order order);
 
-    void updateClient(long id,
+    void updateClient(Long id,
                          String firstname,
                          String lastname,
                          String patronymic,
                          Date date_registered,
-                         int orders_amount,
+                         Integer orders_amount,
                          Date birthdate,
                          String login,
                          String email,
-                         long order);
-    Long insert(Client client, boolean getID);
+                         Order order);
+    Long insert(Client client);
     void delete(Long id);
     Client getClient(Long id);
     HashMap<Long,String> getClientNamesMappedById(List<Long> IDs);

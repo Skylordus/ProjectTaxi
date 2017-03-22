@@ -2,8 +2,13 @@ package com.yberdaliyev.services;
 
 import com.yberdaliyev.models.daos.IAdminDAO;
 import com.yberdaliyev.models.daos.IDriverDAO;
+import com.yberdaliyev.models.entities.AdminEntity;
 import com.yberdaliyev.models.pojos.Admin;
 import com.yberdaliyev.models.pojos.Driver;
+import com.yberdaliyev.models.repositories.AdminRepository;
+import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
+import com.yberdaliyev.models.transformers.PojoToEntityTransformer;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,18 +24,25 @@ import java.util.Properties;
  */
 @Service
 public class AdminService implements IAdminService {
-    private IAdminDAO adminDAO;
+    private static Logger logger = Logger.getLogger(AdminService.class);
+    private AdminRepository repository;
+    private EntityToPojoTransformer entityToPojo;
+    private PojoToEntityTransformer pojoToEntity;
 
     @Autowired
-    public AdminService(IAdminDAO adminDAO) {
-        this.adminDAO = adminDAO;
+    public void setEntityToPojo(EntityToPojoTransformer entityToPojo) {this.entityToPojo = entityToPojo;}
+    @Autowired
+    public void setPojoToEntity(PojoToEntityTransformer pojoToEntity) {this.pojoToEntity = pojoToEntity;}
+
+    @Autowired
+    public AdminService(AdminRepository repository) {
+        this.repository = repository;
     }
 
+    @Secured({"ROLE_ADMIN"})
     public Admin getAdmin (Long id) {
-
-       Admin admin = adminDAO.getById(id);
-
-        return admin;
+       Admin admin = entityToPojo.toAdmin(repository.findOne(id));
+       return admin;
     }
 
     @Secured({"ROLE_ADMIN"})
@@ -71,24 +83,31 @@ public class AdminService implements IAdminService {
                 login,
                 email,
                 "");
-        adminDAO.updateById(id,admin);
+        repository.save(pojoToEntity.toAdminEntity(admin));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public Long insert(Admin admin, boolean getID) {
-        return adminDAO.insert(admin, getID);
+    public Long insert(Admin admin) {
+        return repository.save(pojoToEntity.toAdminEntity(admin)).getId();
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public void delete(Long id) {
-        adminDAO.deleteById(id);
+        repository.deleteById(id);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public List<Admin> getAll() {
-        return adminDAO.getAll();
+        logger.warn("getting all admins");
+        List<AdminEntity> adminEntities = repository.findAll();
+        List<Admin> admins = new ArrayList<>();
+        for (AdminEntity adminEntity : adminEntities) {
+            admins.add(entityToPojo.toAdmin(adminEntity));
+        }
+        return admins;
     }
 
 }

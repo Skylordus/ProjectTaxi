@@ -1,19 +1,20 @@
 package com.yberdaliyev.models.entities;
 
 import javax.persistence.*;
-import java.sql.Time;
+import java.util.Date;
 
 @Entity
 @Table(name = "orders", schema = "main")
 public class OrderEntity {
   @Id
   @GeneratedValue
-  private long id;
+  private Long id;
 
   private String from;
   private String to;
-  private int price_per_km;
-  private Time pickup_time;
+  private Integer price_per_km;
+  @Temporal(TemporalType.TIME)
+  private Date pickup_time;
 
   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
   @JoinColumn(name = "client", referencedColumnName = "id")
@@ -23,12 +24,15 @@ public class OrderEntity {
   @JoinColumn(name = "driver", referencedColumnName = "id")
   private DriverEntity driver;
 
-  private int status;
+  private Integer status;
+
+  @Version
+  private Long version;
 
   public OrderEntity() {
   }
 
-  public OrderEntity(String from, String to, int price_per_km, Time pickup_time, ClientEntity client, DriverEntity driver, int status) {
+  public OrderEntity(String from, String to, int price_per_km, Date pickup_time, ClientEntity client, DriverEntity driver, int status) {
     this.from = from;
     this.to = to;
     this.price_per_km = price_per_km;
@@ -38,11 +42,11 @@ public class OrderEntity {
     this.status = status;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -62,19 +66,19 @@ public class OrderEntity {
     this.to = to;
   }
 
-  public int getPrice_per_km() {
+  public Integer getPrice_per_km() {
     return price_per_km;
   }
 
-  public void setPrice_per_km(int price_per_km) {
+  public void setPrice_per_km(Integer price_per_km) {
     this.price_per_km = price_per_km;
   }
 
-  public Time getPickup_time() {
+  public Date getPickup_time() {
     return pickup_time;
   }
 
-  public void setPickup_time(Time pickup_time) {
+  public void setPickup_time(Date pickup_time) {
     this.pickup_time = pickup_time;
   }
 
@@ -94,11 +98,11 @@ public class OrderEntity {
     this.driver = driver;
   }
 
-  public int getStatus() {
+  public Integer getStatus() {
     return status;
   }
 
-  public void setStatus(int status) {
+  public void setStatus(Integer status) {
     this.status = status;
   }
 }

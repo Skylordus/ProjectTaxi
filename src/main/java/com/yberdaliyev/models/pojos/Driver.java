@@ -1,15 +1,16 @@
 package com.yberdaliyev.models.pojos;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 public class Driver extends User{
-  private long id;
-  private int experience_years;
+  private Long id;
+  private Integer experience_years;
   private Car car;
   private String firstname;
   private String lastname;
   private String patronymic;
-  private java.sql.Date birthdate;
+  private Date birthdate;
   private String login;
   private String email;
   private Order order;
@@ -17,7 +18,7 @@ public class Driver extends User{
 
   public Driver() {}
 
-  public Driver(long id, int experience_years, Car car, String firstname, String lastname, String patronymic, Date birthdate, String login, String email, Order order, String pwd) {
+  public Driver(Long id, Integer experience_years, Car car, String firstname, String lastname, String patronymic, Date birthdate, String login, String email, Order order, String pwd) {
     this.id = id;
     this.experience_years = experience_years;
     this.car = car;
@@ -32,19 +33,19 @@ public class Driver extends User{
   }
 
   @Override
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
-  public int getExperience_years() {
+  public Integer getExperience_years() {
     return experience_years;
   }
 
-  public void setExperience_years(int experience_years) {
+  public void setExperience_years(Integer experience_years) {
     this.experience_years = experience_years;
   }
 

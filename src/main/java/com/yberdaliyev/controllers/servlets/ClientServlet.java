@@ -54,23 +54,26 @@ public class ClientServlet {
 
         if (type == null) {} else
         if (type.equals("new_order")){
-            Order order = orderService.generateOrder(0L,
+
+            Order order = orderService.generateOrder(null,
                     form.getFrom(),
                     form.getTo(),
                     form.getPrice(),
-                    form.getClient_id(),
-                    0L,
+                    client,
+                    null,
                     0,
                     form.getPickup_time());
-            Long id = orderService.insert(order, true);
+
+            Long id = orderService.insert(order);
             logger.error("in new order = "+order.toString());
-            client.setOrder(id);
+            order.setId(id);
+            client.setOrder(order);
             clientService.updateOrder(client.getId(),id);
 
         } else if (type.equals("cancel_order")) {
             logger.trace(client.getId());
-            orderService.delete(client.getOrder());
-            client.setOrder((long)0);
+            orderService.delete(client.getOrder().getId());
+            client.setOrder(null);
         }
         session.setAttribute("user_object",client);
         return generateUserPage(modelAndView, client);
@@ -87,12 +90,12 @@ public class ClientServlet {
 
     private ModelAndView generateUserPage(ModelAndView modelAndView, Client client) {
         modelAndView.addObject("login",client.getFirstname());
-        Long orderId = client.getOrder();
+        Long orderId = client.getOrder().getId();
         if ( (orderId == 0)||(orderId == null) ) {
             modelAndView.addObject("ordered",null);
         } else {
             modelAndView.addObject("ordered","true");
-            Order order = orderService.getOrder(client.getOrder());
+            Order order = orderService.getOrder(client.getOrder().getId());
             modelAndView.addObject("from",order.getFrom());
             modelAndView.addObject("to",order.getTo());
             modelAndView.addObject("time",order.getPickup_time());
@@ -108,12 +111,12 @@ public class ClientServlet {
             }
             modelAndView.addObject("price", str);
             modelAndView.addObject("id",order.getId());
-            i=order.getDriver();
+            i=order.getDriver().getId();
             String str2;
             if (i>0) {
                 Driver driver = driverService.getDriver(i);
                 str=driver.toString();
-                Car car = carService.getCar(driver.getCar());
+                Car car = carService.getCar(driver.getCar().getId());
                 if (car!=null) {str2=car.toString();}
                 else {str2="not assigned yet";}
             } else {

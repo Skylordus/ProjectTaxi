@@ -7,15 +7,16 @@ import java.sql.Date;
  */
 public class CarTableForm {
 
-    private long id;
+    private Long id;
     private String manufacturer;
     private String model;
     private String regnum;
     private String color;
+    private Long driver_id;
 
     public CarTableForm() {}
 
-    public CarTableForm(long id, String manufacturer, String model, String regnum, String color) {
+    public CarTableForm(Long id, String manufacturer, String model, String regnum, String color) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -23,11 +24,11 @@ public class CarTableForm {
         this.color = color;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,5 +62,13 @@ public class CarTableForm {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public Long getDriver_id() {
+        return driver_id;
+    }
+
+    public void setDriver_id(Long driver_id) {
+        this.driver_id = driver_id;
     }
 }
