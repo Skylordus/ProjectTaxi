@@ -25,7 +25,7 @@ public class ClientEntity {
   @JoinColumn(name = "login",referencedColumnName = "login")
   private LoginEntity login;
 
-  private String email;
+
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "\"order\"",referencedColumnName = "id")
@@ -36,7 +36,7 @@ public class ClientEntity {
 
   public ClientEntity() {}
 
-  public ClientEntity(String firstname, String lastname, String patronymic, Date date_registered, int orders_amount, Date birthdate, LoginEntity login, String email, OrderEntity order) {
+  public ClientEntity(String firstname, String lastname, String patronymic, Date date_registered, Integer orders_amount, Date birthdate, LoginEntity login,  OrderEntity order) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.patronymic = patronymic;
@@ -44,7 +44,7 @@ public class ClientEntity {
     this.orders_amount = orders_amount;
     this.birthdate = birthdate;
     this.login = login;
-    this.email = email;
+
     this.order = order;
   }
 
@@ -112,13 +112,7 @@ public class ClientEntity {
     this.login = login;
   }
 
-  public String getEmail() {
-    return email;
-  }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
 
   public OrderEntity getOrder() {
     return order;

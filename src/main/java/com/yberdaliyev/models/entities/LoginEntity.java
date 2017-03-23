@@ -17,6 +17,7 @@ public class LoginEntity {
     @Enumerated(EnumType.STRING)
     private USER_ROLES role;
     private boolean enabled;
+    private String email;
 
     @OneToOne(mappedBy = "login", targetEntity = AdminEntity.class, cascade = CascadeType.ALL)
     private AdminEntity admin;
@@ -30,10 +31,11 @@ public class LoginEntity {
 
     public LoginEntity(){}
 
-    public LoginEntity(String login, String pwd, USER_ROLES role, boolean enabled) {
+    public LoginEntity(String login, String pwd, USER_ROLES role, String email, boolean enabled) {
         this.login = login;
         this.pwd = pwd;
         this.role = role;
+        this.email = email;
         this.enabled = enabled;
     }
 
@@ -91,5 +93,13 @@ public class LoginEntity {
 
     public void setDriver(DriverEntity driver) {
         this.driver = driver;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

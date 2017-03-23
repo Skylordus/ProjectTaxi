@@ -28,7 +28,7 @@ public class DriverEntity {
   @JoinColumn(name = "login",referencedColumnName = "login")
   private LoginEntity login;
 
-  private String email;
+
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "\"order\"",referencedColumnName = "id")
@@ -39,7 +39,7 @@ public class DriverEntity {
 
   public DriverEntity() {}
 
-  public DriverEntity(int experience_years, CarEntity car, String firstname, String lastname, String patronymic, Date birthdate, LoginEntity login, String email, OrderEntity order) {
+  public DriverEntity(Integer experience_years, CarEntity car, String firstname, String lastname, String patronymic, Date birthdate, LoginEntity login,  OrderEntity order) {
     this.experience_years = experience_years;
     this.car = car;
     this.firstname = firstname;
@@ -47,7 +47,7 @@ public class DriverEntity {
     this.patronymic = patronymic;
     this.birthdate = birthdate;
     this.login = login;
-    this.email = email;
+
     this.order = order;
   }
 
@@ -59,11 +59,11 @@ public class DriverEntity {
     this.id = id;
   }
 
-  public int getExperience_years() {
+  public Integer getExperience_years() {
     return experience_years;
   }
 
-  public void setExperience_years(int experience_years) {
+  public void setExperience_years(Integer experience_years) {
     this.experience_years = experience_years;
   }
 
@@ -115,13 +115,7 @@ public class DriverEntity {
     this.login = login;
   }
 
-  public String getEmail() {
-    return email;
-  }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
 
   public OrderEntity getOrder() {
     return order;

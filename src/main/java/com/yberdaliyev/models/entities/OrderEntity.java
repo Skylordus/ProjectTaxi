@@ -32,7 +32,7 @@ public class OrderEntity {
   public OrderEntity() {
   }
 
-  public OrderEntity(String from, String to, int price_per_km, Date pickup_time, ClientEntity client, DriverEntity driver, int status) {
+  public OrderEntity(String from, String to, Integer price_per_km, Date pickup_time, ClientEntity client, DriverEntity driver, Integer status) {
     this.from = from;
     this.to = to;
     this.price_per_km = price_per_km;

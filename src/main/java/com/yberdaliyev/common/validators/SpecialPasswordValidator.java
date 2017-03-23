@@ -7,7 +7,7 @@ import javax.validation.Payload;
 import java.lang.annotation.Annotation;
 
 
-public class SpecialPasswordValidator implements ConstraintValidator<SpecialPasswordConstraint, Object> {
+public class SpecialPasswordValidator implements ConstraintValidator<SpecialPasswordConstraint, String> {
 
 
     @Override
@@ -16,7 +16,12 @@ public class SpecialPasswordValidator implements ConstraintValidator<SpecialPass
     }
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-        return false;
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value==null) return false;
+        if (value.equals("hiber")) {return true;}
+        else {
+            return false;
+        }
+
     }
 }

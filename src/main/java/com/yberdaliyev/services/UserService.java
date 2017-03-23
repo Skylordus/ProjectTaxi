@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
+import java.util.Date;
 
 import static com.yberdaliyev.models.enums.USER_ROLES.ROLE_ADMIN;
 import static com.yberdaliyev.models.enums.USER_ROLES.ROLE_CLIENT;
@@ -110,7 +110,25 @@ public class UserService implements IUserService {
         MyUserDetails userDetails = new MyUserDetails(loginEntity.getLogin(),
                                                       loginEntity.getPwd(),
                                                       loginEntity.getRole(),
+                                                      loginEntity.getEmail(),
                                                       loginEntity.isEnabled());
         return userDetails;
+    }
+
+    public boolean validateSpecialPassword(String pwd, USER_ROLES role) {
+        LoginEntity reg;
+        switch (role) {
+            case ROLE_CLIENT:
+                return true;
+            case ROLE_ADMIN:
+                reg = loginRepository.findOne("ADMIN_REGISTRATION");
+                if (encoder.matches(pwd,reg.getPwd())) return true;
+                break;
+            case ROLE_DRIVER:
+                reg = loginRepository.findOne("DRIVER_REGISTRATION");
+                if (encoder.matches(pwd,reg.getPwd())) return true;
+                break;
+        }
+        return false;
     }
 }

@@ -1,7 +1,9 @@
 .reg-label {
     margin-top: 4px;
 }
-
+.special-password {
+    display: none;
+}
 x, .error {
     color: red;
     font-size: 0.8em;

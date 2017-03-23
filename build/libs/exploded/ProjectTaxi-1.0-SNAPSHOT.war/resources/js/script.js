@@ -4,6 +4,7 @@ document.getElementById("admins-menu").addEventListener("click", function() {sho
 document.getElementById("orders-menu").addEventListener("click", function() {show(1);},false);
 document.getElementById("cars-menu").addEventListener("click", function() {show(5);},false);
 
+
 function show(selected_table) {
 
     switch (selected_table) {
@@ -101,3 +102,14 @@ function createAddForm(form_class, button_id) {
     }
     button.style.display = "none";
 }
+
+function specialPasswordForm(show) {
+    var forms = document.getElementsByClassName("special-password");
+    var i;
+    for (i = 0; i < forms.length; i++) {
+        if (show) {forms[i].style.display = "block";}
+        else {forms[i].style.display = "none";}
+    }
+
+}
+

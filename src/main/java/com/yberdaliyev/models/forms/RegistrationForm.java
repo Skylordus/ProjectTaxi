@@ -1,5 +1,7 @@
 package com.yberdaliyev.models.forms;
 
+import com.yberdaliyev.common.validators.EmailExists;
+import com.yberdaliyev.common.validators.LoginExists;
 import com.yberdaliyev.common.validators.SpecialPasswordConstraint;
 import com.yberdaliyev.models.enums.USER_ROLES;
 import org.hibernate.validator.constraints.Email;
@@ -8,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
-import java.sql.Date;
+import java.util.Date;
 
 
 /**
@@ -19,28 +21,29 @@ public class RegistrationForm {
     @NotNull
     private USER_ROLES user_role;
     @NotNull
-    @Size(min=2, max=10)
+    @Size(min=2, max=10, message = "size must be between 2 and 10")
     private String user_name;
     @NotNull
-    @Size(min=2, max=10)
+    @Size(min=2, max=10, message = "size must be between 2 and 10")
     private String user_surname;
-    @Size(min=2, max=10)
+    //@Size(min=2, max=10, message = "size must be between 2 and 10")
     private String user_patronymic;
-    @Past
+    @Past(message = "are you born in future?")
     private Date user_birthdate;
+    @LoginExists(message = "such login already exists")
     @NotNull
-    @Size(min=3, max=15)
+    @Size(min=3, max=20, message = "size must be between 3 and 15")
     private String user_login;
     @NotNull
-    @Size(min=5, max=20)
+    @Size(min=5, max=20, message = "size must be between 5 and 20")
     private String user_password;
+
     @NotNull
-    @Size(min=3, max=30)
-    @Email
+    @Size(min=3, max=40, message = "size must be between 3 and 30")
+    @EmailExists(message = "such email already exists")
     private String user_email;
-    @NotNull
-    @Size(min=3, max=20)
-    @SpecialPasswordConstraint(message = "special password does not match")
+
+    //@SpecialPasswordConstraint(message = "special password does not match")
     private String special_password;
 
 

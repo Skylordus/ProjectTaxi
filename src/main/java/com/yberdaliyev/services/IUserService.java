@@ -6,7 +6,7 @@ import com.yberdaliyev.models.pojos.User;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by Yerlan on 02.03.2017.
@@ -23,4 +23,5 @@ public interface IUserService {
                   String user_email);
     User getUserByLoginAndRole(String login, USER_ROLES role);
     MyUserDetails getUserDetailsByLogin(String login);
+    boolean validateSpecialPassword(String pwd, USER_ROLES role);
 }

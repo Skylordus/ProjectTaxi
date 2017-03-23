@@ -67,8 +67,10 @@
 								<label class="reg-label" for="user_email">Email:<x>*</x></label> <br>
 								<hr style="width: 700px">
 								<label class="reg-label" for="user_role">Account type:<x>*</x></label> <br>
-								<label for="special_password">Special password:</label> <br>
-								<p style="color: red; font-size: 0.7em;">For account types other than client</p>
+								<div class="special-password">
+									<label for="special_password">Special password:</label> <br>
+									<p style="color: red; font-size: 0.7em;">For account types other than client</p>
+								</div>
 							</div>
 							<div class="order-inputs">
 								<div class="inputs-container">
@@ -93,20 +95,21 @@
 								</div>
 								<div class="inputs-container">
 									<th:input path="user_birthdate" cssClass="order-address" cssStyle="position: absolute; top: 0" type="date" placeholder="date of birth"/>
-									<th:errors path="user_birthdate" cssStyle="width: 100px; height: 15px; overflow: hidden;" cssClass="error"/>
+									<th:errors path="user_birthdate" cssClass="error"/>
 								</div>
 								<div class="inputs-container">
 									<th:input path="user_email" cssClass="order-address" cssStyle="position: absolute; top: 0" type="email" placeholder="your email"/>
 									<th:errors path="user_email" cssClass="error"/>
 								</div>
 								<div style="margin-top: 43px; margin-bottom: 18px; color: #f18500; font-weight: bold">
-									<th:radiobutton path="user_role" checked="checked" value="ROLE_CLIENT"/>Client
-									<th:radiobutton path="user_role" value="ROLE_DRIVER"/>Driver
-									<th:radiobutton path="user_role" value="ROLE_ADMIN"/>Administrator<br>
+									<th:radiobutton name="user_role" path="user_role" onclick="specialPasswordForm(false)" checked="checked" value="ROLE_CLIENT"/>Client
+									<th:radiobutton name="user_role" path="user_role" onclick="specialPasswordForm(true)" value="ROLE_DRIVER"/>Driver
+									<th:radiobutton name="user_role" path="user_role" onclick="specialPasswordForm(true)" value="ROLE_ADMIN"/>Administrator<br>
+
 								</div>
-								<div class="inputs-container">
+								<div class="inputs-container special-password">
 									<th:input path="special_password" cssClass="order-address" cssStyle="position: absolute; top: 0" type="password" placeholder="enter special password"/>
-									<th:errors path="special_password" cssClass="error"/>
+									<div style="display: ${special_password}" class="error">wrong</div>
 								</div>
 
 							</div>
@@ -118,6 +121,12 @@
 			</div>
 		</section>
 
+		<script>
+            var radios = document.getElementsByName('user_role');
+            if (radios[0].checked) {specialPasswordForm(false)}
+            if (radios[1].checked) {specialPasswordForm(true)}
+            if (radios[2].checked) {specialPasswordForm(true)}
+		</script>
 
 	</div> <!-- End of #main-content -->
 	

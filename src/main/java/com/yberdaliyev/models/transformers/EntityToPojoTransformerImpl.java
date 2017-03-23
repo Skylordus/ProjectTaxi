@@ -18,7 +18,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
                 adminEntity.getPatronymic(),
                 adminEntity.getBirthdate(),
                 adminEntity.getLogin().getLogin(),
-                adminEntity.getEmail(),
+                adminEntity.getLogin().getEmail(),
                 adminEntity.getLogin().getPwd());
     }
 
@@ -44,7 +44,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
                 clientEntity.getOrders_amount(),
                 clientEntity.getBirthdate(),
                 clientEntity.getLogin().getLogin(),
-                clientEntity.getEmail(),
+                clientEntity.getLogin().getEmail(),
                 toOrder(clientEntity.getOrder()),
                 clientEntity.getLogin().getPwd() );
     }
@@ -60,7 +60,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
                 driverEntity.getPatronymic(),
                 driverEntity.getBirthdate(),
                 driverEntity.getLogin().getLogin(),
-                driverEntity.getEmail(),
+                driverEntity.getLogin().getEmail(),
                 toOrder(driverEntity.getOrder()),
                 driverEntity.getLogin().getPwd());
     }
@@ -83,6 +83,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
         return new MyUserDetails(loginEntity.getLogin(),
                                  loginEntity.getPwd(),
                                  loginEntity.getRole(),
+                                 loginEntity.getEmail(),
                                  loginEntity.isEnabled());
     }
 }

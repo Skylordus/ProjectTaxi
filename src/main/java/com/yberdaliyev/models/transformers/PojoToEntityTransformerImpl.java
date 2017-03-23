@@ -19,25 +19,25 @@ public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
         LoginEntity login = new LoginEntity(admin.getLogin(),
                                             admin.getPwd(),
                                             USER_ROLES.ROLE_ADMIN,
+                                            admin.getEmail(),
                                             true);
 
         return new AdminEntity(admin.getFirstname(),
                 admin.getLastname(),
                 admin.getPatronymic(),
                 admin.getBirthdate(),
-                login,
-                admin.getEmail());
+                login);
 
     }
 
     @Override
     public CarEntity toCarEntity(Car car) {
-
+        Driver driver = car.getDriver();
         return new CarEntity(   car.getManufacturer(),
                 car.getModel(),
                 car.getRegnum(),
                 car.getColor(),
-                toDriverEntity(car.getDriver()));
+                driver==null?null:toDriverEntity(driver));
     }
 
     @Override
@@ -46,7 +46,9 @@ public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
         LoginEntity login = new LoginEntity(client.getLogin(),
                 client.getPwd(),
                 USER_ROLES.ROLE_CLIENT,
+                client.getEmail(),
                 true);
+        Order order = client.getOrder();
 
         return new ClientEntity( client.getFirstname(),
                 client.getLastname(),
@@ -55,8 +57,7 @@ public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
                 client.getOrders_amount(),
                 client.getBirthdate(),
                 login,
-                client.getEmail(),
-                toOrderEntity(client.getOrder()));
+                (order==null)?null:toOrderEntity(order));
     }
 
     @Override
@@ -64,8 +65,9 @@ public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
         LoginEntity login = new LoginEntity(driver.getLogin(),
                 driver.getPwd(),
                 USER_ROLES.ROLE_CLIENT,
+                driver.getEmail(),
                 true);
-
+        Order order = driver.getOrder();
         return new DriverEntity( driver.getExperience_years(),
                 toCarEntity(driver.getCar()),
                 driver.getFirstname(),
@@ -73,18 +75,20 @@ public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
                 driver.getPatronymic(),
                 driver.getBirthdate(),
                 login,
-                driver.getEmail(),
-                toOrderEntity(driver.getOrder()));
+                (order==null)?null:toOrderEntity(order));
     }
 
     @Override
     public OrderEntity toOrderEntity(Order order) {
+        Client client = order.getClient();
+        Driver driver = order.getDriver();
+
          return new OrderEntity( order.getFrom(),
                                  order.getTo(),
                                  order.getPrice_per_km(),
                                  order.getPickup_time(),
-                                 toClientEntity(order.getClient()),
-                                 toDriverEntity(order.getDriver()),
+                                 client==null?null:toClientEntity(client),
+                                 driver==null?null:toDriverEntity(driver),
                                  order.getStatus() );
          }
 }

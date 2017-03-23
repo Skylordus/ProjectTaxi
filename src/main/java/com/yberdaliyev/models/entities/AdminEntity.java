@@ -19,7 +19,7 @@ public class AdminEntity {
   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
   @JoinColumn(name = "login",referencedColumnName = "login")
   private LoginEntity login;
-  private String email;
+
 
   @Version
   private Long version;
@@ -30,14 +30,14 @@ public class AdminEntity {
                      String lastname,
                      String patronymic,
                      Date birthdate,
-                     LoginEntity login,
-                     String email) {
+                     LoginEntity login
+                     ) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.patronymic = patronymic;
     this.birthdate = birthdate;
     this.login = login;
-    this.email = email;
+
   }
 
   public Long getId() {
@@ -88,12 +88,6 @@ public class AdminEntity {
     this.login = login;
   }
 
-  public String getEmail() {
-    return email;
-  }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
 
 }

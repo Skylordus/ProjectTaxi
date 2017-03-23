@@ -7,13 +7,15 @@ public class MyUserDetails {
   private String pwd;
   private USER_ROLES role;
   private boolean enabled;
+  private String email;
 
   public MyUserDetails() {}
 
-  public MyUserDetails(String login, String pwd, USER_ROLES role, boolean enabled) {
+  public MyUserDetails(String login, String pwd, USER_ROLES role, String email, boolean enabled) {
     this.login = login;
     this.pwd = pwd;
     this.role = role;
+    this.email = email;
     this.enabled = enabled;
   }
 
@@ -47,5 +49,13 @@ public class MyUserDetails {
 
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 }
