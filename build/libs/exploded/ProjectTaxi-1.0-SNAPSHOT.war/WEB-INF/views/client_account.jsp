@@ -1,5 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="th" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="com.yberdaliyev.models.pojos.User" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,6 +27,9 @@
 
 	<%
 		User user = (User) session.getAttribute("user_object");
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String currentDate = dt.format(date);
 	%>
 	<header>
 		<nav id="header-nav" class="navbar navbar-default">
@@ -75,7 +81,7 @@
 						<c:if test="${notfilled!=null}">
 						<x>You need to fill out all form fields</x>
 						</c:if>
-						<form class="new-order-form" action="/client_account" method="post">
+						<th:form commandName="orderForm" cssClass="new-order-form" action="/client_account" method="post">
 
 							<div class="order-labels">
 								<label for="from">From:</label> <br>
@@ -84,16 +90,27 @@
 								<label for="plan">Select a plan:</label>
 							</div>
 							<div class="order-inputs">
-								<input class="order-address" type="text" name="from" id="from" placeholder="some city, some street, some home"> <br>
-								<input class="order-address" type="text" name="to" id="to" placeholder="some city, some street, some home"> <br>
-								<input class="order-address" style="width: 100px; text-align: center" type="time" name="pickup_time" id="pickup_time"> <br>
-								<input type="radio" name="plan" id="plan" value="economy">Economy
-								<input type="radio" name="plan" value="comfort">Comfort
-								<input type="radio" name="plan" value="business">Business
+								<div class="inputs-container">
+									<th:input path="from" cssClass="order-address" cssStyle="position: absolute; top: 0" type="text" name="from" id="from" placeholder="some city, some street, some home"/>
+									<th:errors path="from" cssClass="error"/>
+								</div>
+								<div class="inputs-container">
+									<th:input path="to" cssClass="order-address" cssStyle="position: absolute; top: 0" type="text" name="to" id="to" placeholder="some city, some street, some home"/>
+									<th:errors path="to" cssClass="error"/>
+								</div>
+								<div class="inputs-container">
+									<th:input path="pickup_time" cssClass="order-address" cssStyle="position: absolute; top: 0; text-align: center" type="text" onfocus="(this.type='datetime-local')" placeholder="<%=currentDate%>" value="<%=currentDate%>"/>
+									<th:errors path="pickup_time" cssClass="error"/>
+								</div>
+								<div class="inputs-container">
+									<th:radiobutton path="price" name="plan" checked="true" id="plan" value="16"/>Economy
+									<th:radiobutton path="price" name="plan" value="25"/>Comfort
+									<th:radiobutton path="price" name="plan" value="40"/>Business
+								</div>
 							</div>
 							<input type="hidden" name="type" value="new_order">
 							<input class="new-order-button" type="submit" value="Order" formmethod="post">
-						</form>
+						</th:form>
 					</div>
 
 					<div style="display: <%=orderStatusBlock%>" class="sub-md-block">
@@ -130,7 +147,7 @@
 							<span class="order-field" style="color:red">Time: </span>
 							<span class="order-value"><%=request.getAttribute("time")%></span>
 						</div>
-						<form action="/client_account" method="post">
+						<form action="/client_account/cancel_order" method="post">
 							<input type="hidden" name="type" value="cancel_order">
 							<input style="right: 30px" class="new-order-button" type="submit" value="Cancel order" formmethod="post">
 						</form>
@@ -139,6 +156,15 @@
 			</div>
 		</section>
 	</div> <!-- End of #main-content -->
+
+	<script type="text/javascript">
+//        Date.prototype.toDateInputValue = (function() {
+//            var local = new Date(this);
+//            local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+//            return local.toJSON().slice(0,10);
+//        });
+//        document.getElementById('pickup_time').value = new Date().toDateInputValue();
+	</script>
 	
 	<footer class="panel-footer">
 		<div class="container">

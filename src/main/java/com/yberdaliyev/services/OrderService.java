@@ -1,6 +1,5 @@
 package com.yberdaliyev.services;
 
-import com.yberdaliyev.models.daos.*;
 import com.yberdaliyev.models.entities.OrderEntity;
 import com.yberdaliyev.models.pojos.*;
 import com.yberdaliyev.models.repositories.OrderRepository;
@@ -8,14 +7,11 @@ import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
 import com.yberdaliyev.models.transformers.PojoToEntityTransformer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-
-import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Properties;
+
 
 /**
  * Created by Yerlan on 26.02.2017.
@@ -56,15 +52,18 @@ public class OrderService implements IOrderService {
                                                      "Time is up, but the driver didn't arrive"};
 
     public Order getOrder(Long id) {
-       Order order = entityToPojo.toOrder(repository.findOne(id));
+        if (id==null) return null;
+        Order order = entityToPojo.toOrder(repository.findOne(id));
+
+        logger.warn("My order is:"+order);
         return order;
     }
 
     public void setStatus(long orderID, int status) {
         updateOrder(orderID,
-                "",
-                "",
-                0,
+                null,
+                null,
+                null,
                 null,
                 null,
                 status,
@@ -86,6 +85,7 @@ public class OrderService implements IOrderService {
     public List<Order> getFreeOrders()  {
         logger.warn("getting free orders");
         List<OrderEntity> orderEntities = repository.findByDriverEqualsNull();
+        logger.warn("free orders="+orderEntities);
         List<Order> orders = new ArrayList<>();
         for (OrderEntity orderEntity : orderEntities) {
             orders.add(entityToPojo.toOrder(orderEntity));
@@ -101,7 +101,7 @@ public class OrderService implements IOrderService {
                                Client client,
                                Driver driver,
                                Integer status,
-                               Time time) {
+                               Date time) {
         Order order = new Order();
         order.setId(id);
         order.setFrom(from);
@@ -122,26 +122,29 @@ public class OrderService implements IOrderService {
                             Client client,
                             Driver driver,
                             Integer status,
-                            Time time) {
-        Order order = new Order(id,
-                from,
-                to,
-                price,
-                time,
-                client,
-                driver,
-                status);
+                            Date time) {
+        OrderEntity orderEntity = repository.findOne(id);
+        if (from!=null) {orderEntity.setFrom(from);}
+        if (to!=null) {orderEntity.setTo(to);}
+        if ((price!=null)&&(price>0)) {orderEntity.setPrice_per_km(price);}
+        if (client!=null) {orderEntity.setClient(pojoToEntity.toClientEntity(client));}
+        if (driver!=null) {orderEntity.setDriver(pojoToEntity.toDriverEntity(driver));}
+        if ((status!=null)&&(status>0)) {orderEntity.setStatus(status);}
+        if (time!=null) {orderEntity.setPickup_time(time);}
 
-       repository.save(pojoToEntity.toOrderEntity(order));
+       repository.save(orderEntity);
     }
 
     @Override
     public Long insert(Order order) {
-        return repository.save(pojoToEntity.toOrderEntity(order)).getId();
+        OrderEntity orderEntity = pojoToEntity.toOrderEntity(order);
+        logger.warn("insert method, GOT THE ENTITY");
+        return repository.save(orderEntity).getId();
     }
 
     @Override
     public void delete(Long id) {
+        logger.warn("deleting order ID="+id);
         repository.deleteById(id);
     }
 

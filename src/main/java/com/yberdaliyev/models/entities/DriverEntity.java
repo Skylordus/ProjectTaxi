@@ -24,14 +24,14 @@ public class DriverEntity {
   @Temporal(TemporalType.DATE)
   private Date birthdate;
 
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
   @JoinColumn(name = "login",referencedColumnName = "login")
   private LoginEntity login;
 
 
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "\"order\"",referencedColumnName = "id")
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinColumn(name = "\"order\"")
   private OrderEntity order;
 
   @Version
@@ -47,7 +47,6 @@ public class DriverEntity {
     this.patronymic = patronymic;
     this.birthdate = birthdate;
     this.login = login;
-
     this.order = order;
   }
 

@@ -95,18 +95,21 @@ public class UserService implements IUserService {
 
     public User getUserByLoginAndRole(String login, USER_ROLES role) {
         User user = null;
+        LoginEntity loginEntity = loginRepository.findOne(login);
+        if (loginEntity==null) return null;
         if (role.equals(ROLE_CLIENT)) {
-            user = entityToPojo.toClient(clientRepository.findByLogin(login));
+            user = entityToPojo.toClient(clientRepository.findByLogin(loginEntity));
         } else if (role.equals(ROLE_DRIVER)) {
-            user = entityToPojo.toDriver(driverRepository.findByLogin(login));
+            user = entityToPojo.toDriver(driverRepository.findByLogin(loginEntity));
         } else if (role.equals(ROLE_ADMIN)) {
-            user = entityToPojo.toAdmin(adminRepository.findByLogin(login));
+            user = entityToPojo.toAdmin(adminRepository.findByLogin(loginEntity));
         }
         return user;
     }
 
     public MyUserDetails getUserDetailsByLogin(String login) {
         LoginEntity loginEntity = loginRepository.findOne(login);
+        if (loginEntity==null) return null;
         MyUserDetails userDetails = new MyUserDetails(loginEntity.getLogin(),
                                                       loginEntity.getPwd(),
                                                       loginEntity.getRole(),

@@ -3,6 +3,12 @@ package com.yberdaliyev.models.transformers;
 import com.yberdaliyev.models.entities.*;
 import com.yberdaliyev.models.enums.USER_ROLES;
 import com.yberdaliyev.models.pojos.*;
+import com.yberdaliyev.models.repositories.CarRepository;
+import com.yberdaliyev.models.repositories.ClientRepository;
+import com.yberdaliyev.models.repositories.DriverRepository;
+import com.yberdaliyev.models.repositories.OrderRepository;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -12,10 +18,24 @@ import java.sql.Date;
  */
 @Component
 public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
+    Logger logger = Logger.getLogger(PojoToEntityTransformerImpl.class);
+    private ClientRepository clientRepository;
+    private DriverRepository driverRepository;
+    private OrderRepository orderRepository;
+    private CarRepository carRepository;
 
+    @Autowired
+    public void setClientRepository(ClientRepository clientRepository) {this.clientRepository = clientRepository;}
+    @Autowired
+    public void setDriverRepository(DriverRepository driverRepository) {this.driverRepository = driverRepository;}
+    @Autowired
+    public void setOrderRepository(OrderRepository orderRepository) {this.orderRepository = orderRepository;}
+    @Autowired
+    public void setCarRepository(CarRepository carRepository) {this.carRepository = carRepository;}
 
     @Override
     public AdminEntity toAdminEntity(Admin admin) {
+        if (admin==null) return null;
         LoginEntity login = new LoginEntity(admin.getLogin(),
                                             admin.getPwd(),
                                             USER_ROLES.ROLE_ADMIN,
@@ -32,6 +52,7 @@ public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
 
     @Override
     public CarEntity toCarEntity(Car car) {
+        if (car==null) return null;
         Driver driver = car.getDriver();
         return new CarEntity(   car.getManufacturer(),
                 car.getModel(),
@@ -42,53 +63,70 @@ public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
 
     @Override
     public ClientEntity toClientEntity(Client client) {
+        logger.warn("in toClientEntity " +this.hashCode());
+        if (client==null) return null;
+        if (client.getId()!=null) {
+              return clientRepository.findOne(client.getId());
+        }
 
         LoginEntity login = new LoginEntity(client.getLogin(),
                 client.getPwd(),
                 USER_ROLES.ROLE_CLIENT,
                 client.getEmail(),
                 true);
-        Order order = client.getOrder();
 
-        return new ClientEntity( client.getFirstname(),
+        ClientEntity clientEntity = new ClientEntity( client.getFirstname(),
                 client.getLastname(),
                 client.getPatronymic(),
                 client.getDate_registered(),
                 client.getOrders_amount(),
                 client.getBirthdate(),
                 login,
-                (order==null)?null:toOrderEntity(order));
+                new OrderEntity(client.getOrder()));
+        logger.warn("finished toClientEntity "+this.hashCode());
+        return clientEntity;
     }
 
     @Override
     public DriverEntity toDriverEntity(Driver driver) {
+        if (driver==null) return null;
+        if (driver.getId()!=null) {
+            return driverRepository.findOne(driver.getId());
+        }
+
         LoginEntity login = new LoginEntity(driver.getLogin(),
                 driver.getPwd(),
-                USER_ROLES.ROLE_CLIENT,
+                USER_ROLES.ROLE_DRIVER,
                 driver.getEmail(),
                 true);
-        Order order = driver.getOrder();
+
+        OrderEntity order = orderRepository.findOne(driver.getOrder());
+        CarEntity carEntity = carRepository.findOne(driver.getCar());
+
         return new DriverEntity( driver.getExperience_years(),
-                toCarEntity(driver.getCar()),
+                carEntity,
                 driver.getFirstname(),
                 driver.getLastname(),
                 driver.getPatronymic(),
                 driver.getBirthdate(),
                 login,
-                (order==null)?null:toOrderEntity(order));
+                order);
     }
 
     @Override
     public OrderEntity toOrderEntity(Order order) {
+        logger.warn("in toOrderEntity "+this.hashCode());
+        if (order==null) return null;
         Client client = order.getClient();
         Driver driver = order.getDriver();
-
-         return new OrderEntity( order.getFrom(),
+        OrderEntity orderEntity = new OrderEntity( order.getFrom(),
                                  order.getTo(),
                                  order.getPrice_per_km(),
                                  order.getPickup_time(),
                                  client==null?null:toClientEntity(client),
                                  driver==null?null:toDriverEntity(driver),
                                  order.getStatus() );
+        logger.warn("finished toOrderEntity "+this.hashCode());
+        return orderEntity;
          }
 }

@@ -12,6 +12,7 @@ import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
 import com.yberdaliyev.models.transformers.PojoToEntityTransformer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,7 @@ public class ClientService implements IClientService {
         client.setLogin(login);
         client.setLastname(lastname);
         client.setPatronymic(patronymic);
-        client.setOrder(order);
+        client.setOrder(order==null?null:order.getId());
         client.setDate_registered(date_registered);
         client.setBirthdate(birthdate);
         client.setOrders_amount(orders_amount);
@@ -83,7 +84,7 @@ public class ClientService implements IClientService {
                 birthdate,
                 login,
                 email,
-                order,
+                order==null?null:order.getId(),
                 null);
 
         repository.save(pojoToEntity.toClientEntity(client));
@@ -139,7 +140,12 @@ public class ClientService implements IClientService {
          OrderEntity orderEntity = new OrderEntity();
          orderEntity.setId(order_id);
          clientEntity.setOrder(orderEntity);
-         repository.save(clientEntity);
+
+        try {
+            repository.save(clientEntity);
+        } catch (ObjectOptimisticLockingFailureException e) {
+
+        }
     }
 
     @Override

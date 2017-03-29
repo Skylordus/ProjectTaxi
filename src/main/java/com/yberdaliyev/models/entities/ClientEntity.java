@@ -21,14 +21,14 @@ public class ClientEntity {
   @Temporal(TemporalType.DATE)
   private Date birthdate;
 
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
   @JoinColumn(name = "login",referencedColumnName = "login")
   private LoginEntity login;
 
 
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "\"order\"",referencedColumnName = "id")
+  @OneToOne(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  //@JoinColumn(name = "\"order\"",referencedColumnName = "id")
   private OrderEntity order;
 
   @Version

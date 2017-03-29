@@ -70,25 +70,15 @@ public class DriverServlet {
         if ( type.equals("pick") ) {
             String status = String.valueOf(OrderService.STATUS_NOT_STARTED);
 
-            orderService.updateOrder(order_id,
-                    "",
-                    "",
-                    null,
-                    null,
-                    driver,
-                    0,
-                    null);
-
             driverService.updateDriver(driver.getId(),
-                    "",
-                    "",
-                    "",
                     null,
                     null,
                     null,
-                    "",
-                    "",
-                    order);
+                    null,
+                    null,
+                    null,
+                    order_id);
+            orderService.setStatus(order_id,OrderService.STATUS_NOT_STARTED);
         } else
         if ( type.equals("on_execution") ) {
             orderService.setStatus(order_id,OrderService.STATUS_FULFILLING);
@@ -98,7 +88,7 @@ public class DriverServlet {
             order_id = 0L;
             clientService.increaseOrdersCount(client_id);
         }
-        driver.setOrder(order);
+        driver.setOrder(order.getId());
         session.setAttribute("user_object", driver);
         return doGet(session);
     }
@@ -109,9 +99,9 @@ public class DriverServlet {
         logger.warn("on doGet DriverServlet");
         ModelAndView modelAndView = new ModelAndView("driver_account");
         Driver driver = (Driver) session.getAttribute("user_object");
-
+        logger.warn("drivers order="+driver.getOrder());
         boolean showOrder = false;
-        Order order = driver.getOrder();
+        Order order = orderService.getOrder(driver.getOrder());
         if (order!=null) {
             if ( (order.getStatus()!=OrderService.STATUS_FINISHED)&&(order.getStatus()!=OrderService.STATUS_NO_DRIVER)) {
                 showOrder=true;
@@ -123,7 +113,7 @@ public class DriverServlet {
             Client client = order.getClient();
             String clientName = client.getFirstname()+" "+client.getPatronymic()+" "+client.getLastname();
             modelAndView.addObject("client",clientName);
-            Car car = driver.getCar();
+            Car car = carService.getCar(driver.getCar());
             String carName = "No car";
             if (car!=null) carName = car.toString();
             modelAndView.addObject("car",carName);

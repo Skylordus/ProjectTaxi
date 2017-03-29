@@ -30,13 +30,6 @@
 		else if (request.isUserInRole("ROLE_DRIVER")) {roleAction="/driver_account";}
 		else {login="visible"; logout="hidden";}
 
-//		if (session.getAttribute("user_object")!=null) {
-//		     login = "hidden";
-//		     logout = "visible";
-//		     int user_role = request.getAttribute("user_role");
-//		     if (user_role==2) {roleAction="/driver_account";}
-//		     else if (user_role==3) {roleAction="/admin_account";}
-//		}
 		if (request.getParameter("error")!=null) {
 		    loginIncorrect = "visible";
 		}
@@ -101,7 +94,9 @@
 
 
 	<div id="main-content" class="container">
-
+		<c:if test="${regsuccess!=null}">
+			<h1 style="color: #fff; font-weight: bold; text-align: center; text-shadow: 0 0 5px black">Registration successful!</h1>
+		</c:if>
 		<div class="jumbotron" style="padding: 0">
 			<div id="jumbotron-img"></div>
 		</div>

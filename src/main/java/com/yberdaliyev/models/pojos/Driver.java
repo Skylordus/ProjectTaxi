@@ -6,29 +6,29 @@ import java.util.Date;
 public class Driver extends User{
   private Long id;
   private Integer experience_years;
-  private Car car;
+  private Long carid;
   private String firstname;
   private String lastname;
   private String patronymic;
   private Date birthdate;
   private String login;
   private String email;
-  private Order order;
+  private Long orderid;
   private String pwd;
 
   public Driver() {}
 
-  public Driver(Long id, Integer experience_years, Car car, String firstname, String lastname, String patronymic, Date birthdate, String login, String email, Order order, String pwd) {
+  public Driver(Long id, Integer experience_years, Long carid, String firstname, String lastname, String patronymic, Date birthdate, String login, String email, Long orderid, String pwd) {
     this.id = id;
     this.experience_years = experience_years;
-    this.car = car;
+    this.carid = carid;
     this.firstname = firstname;
     this.lastname = lastname;
     this.patronymic = patronymic;
     this.birthdate = birthdate;
     this.login = login;
     this.email = email;
-    this.order = order;
+    this.orderid = orderid;
     this.pwd = pwd;
   }
 
@@ -49,12 +49,12 @@ public class Driver extends User{
     this.experience_years = experience_years;
   }
 
-  public Car getCar() {
-    return car;
+  public Long getCar() {
+    return carid;
   }
 
-  public void setCar(Car car) {
-    this.car = car;
+  public void setCar(Long carid) {
+    this.carid = carid;
   }
 
   @Override
@@ -117,12 +117,12 @@ public class Driver extends User{
     this.email = email;
   }
 
-  public Order getOrder() {
-    return order;
+  public Long getOrder() {
+    return orderid;
   }
 
-  public void setOrder(Order order) {
-    this.order = order;
+  public void setOrder(Long orderid) {
+    this.orderid = orderid;
   }
 
   @Override

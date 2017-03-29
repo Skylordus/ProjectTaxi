@@ -38,6 +38,7 @@ public class CarService implements ICarService {
 
     @Override
     public Car getCar(Long id) {
+        if (id==null) return null;
         Car car = entityToPojo.toCar(repository.findOne(id));
         return car;
     }

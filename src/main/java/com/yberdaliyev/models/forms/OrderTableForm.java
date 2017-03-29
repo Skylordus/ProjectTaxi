@@ -1,6 +1,10 @@
 package com.yberdaliyev.models.forms;
 
-import java.sql.Time;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 /**
  * Created by Yerlan on 20.03.2017.
@@ -8,17 +12,22 @@ import java.sql.Time;
 public class OrderTableForm {
 
     private long id;
+    @NotNull
+    @Size(min=5, max=40, message = "size must be between 5 and 30")
     private String from;
+    @NotNull
+    @Size(min=5, max=40, message = "size must be between 5 and 30")
     private String to;
     private long client_id;
     private long driver_id;
     private int price;
     private int status;
-    private Time pickup_time;
+   // @DateTimeFormat(pattern = "")
+    private Date pickup_time;
 
     public OrderTableForm() {}
 
-    public OrderTableForm(long id, String from, String to, long client_id, long driver_id, int price, int status, Time pickup_time) {
+    public OrderTableForm(long id, String from, String to, long client_id, long driver_id, int price, int status, Date pickup_time) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -85,11 +94,11 @@ public class OrderTableForm {
         this.status = status;
     }
 
-    public Time getPickup_time() {
+    public Date getPickup_time() {
         return pickup_time;
     }
 
-    public void setPickup_time(Time pickup_time) {
+    public void setPickup_time(Date pickup_time) {
         this.pickup_time = pickup_time;
     }
 }

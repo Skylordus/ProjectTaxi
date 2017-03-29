@@ -11,6 +11,7 @@ import com.yberdaliyev.services.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +43,7 @@ public class LoginServlet {
 
     @RequestMapping(value = "/login")
     public ModelAndView login(HttpServletRequest request, HttpSession session)  {
+        logger.warn("login controller, login method start");
         String error = request.getParameter("error");
         if ((error!=null)&&(error.equals("true"))) {return new ModelAndView("index");}
         ModelAndView modelAndView = new ModelAndView("failed");
@@ -55,14 +57,16 @@ public class LoginServlet {
         if (role == null) {modelAndView.addObject("cause","no role"); return modelAndView;}
 
         User user = userService.getUserByLoginAndRole(login,role);
+
         if (user==null) {modelAndView.addObject("cause","could not find user"); return modelAndView;}
 
         session.setAttribute("user_object", user);
         modelAndView.setViewName("index");
+
         return modelAndView;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     public String showIndex( )  {
         return "index";
     }

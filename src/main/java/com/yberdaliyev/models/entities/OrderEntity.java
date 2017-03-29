@@ -9,18 +9,19 @@ public class OrderEntity {
   @Id
   @GeneratedValue
   private Long id;
-
+  @Column(name = "\"from\"")
   private String from;
+  @Column(name = "\"to\"")
   private String to;
   private Integer price_per_km;
   @Temporal(TemporalType.TIME)
   private Date pickup_time;
 
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH, optional = false)
   @JoinColumn(name = "client", referencedColumnName = "id")
   private ClientEntity client;
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "driver", referencedColumnName = "id")
   private DriverEntity driver;
 
@@ -30,6 +31,10 @@ public class OrderEntity {
   private Long version;
 
   public OrderEntity() {
+  }
+
+  public OrderEntity(Long id) {
+    this.id = id;
   }
 
   public OrderEntity(String from, String to, Integer price_per_km, Date pickup_time, ClientEntity client, DriverEntity driver, Integer status) {

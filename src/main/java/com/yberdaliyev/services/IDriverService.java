@@ -20,22 +20,20 @@ public interface IDriverService {
                           String lastname,
                           String patronymic,
                           Integer experience_years,
-                          Car car,
+                          Long car,
                           Date birthdate,
                           String login,
                           String email,
-                          Order order);
+                          Long order);
 
     void updateDriver(Long id,
                          String firstname,
                          String lastname,
                          String patronymic,
                          Integer experience_years,
-                         Car car,
+                         Long car,
                          Date birthdate,
-                         String login,
-                         String email,
-                         Order order);
+                         Long order);
 
     Long insert(Driver driver);
     void delete(Long id);

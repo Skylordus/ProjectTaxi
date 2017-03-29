@@ -67,6 +67,7 @@ public class RegistrationServlet {
         }
         if (hasErrors) return modelAndView;
 
+        logger.warn("ROLE: " + form.getUser_role());
         userService.register(form.getUser_role(),
                              form.getUser_name(),
                              form.getUser_surname(),
@@ -75,6 +76,9 @@ public class RegistrationServlet {
                              form.getUser_login(),
                              form.getUser_password(),
                              form.getUser_email());
+
+        modelAndView.setViewName("index");
+        modelAndView.addObject("regsuccess",true);
 
         return modelAndView;
     }

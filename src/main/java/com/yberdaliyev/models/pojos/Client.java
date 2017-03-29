@@ -13,13 +13,15 @@ public class Client extends User{
   private Date birthdate;
   private String login;
   private String email;
-  private Order order;
+  private Long orderid;
   private String pwd;
 
 
   public Client() {}
-
-  public Client(Long id, String firstname, String lastname, String patronymic, Date date_registered, Integer orders_amount, Date birthdate, String login, String email, Order order, String pwd) {
+  public Client(Long id) {
+    this.id = id;
+  }
+  public Client(Long id, String firstname, String lastname, String patronymic, Date date_registered, Integer orders_amount, Date birthdate, String login, String email, Long orderid, String pwd) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
@@ -29,8 +31,13 @@ public class Client extends User{
     this.birthdate = birthdate;
     this.login = login;
     this.email = email;
-    this.order = order;
+    this.orderid = orderid;
     this.pwd = pwd;
+  }
+
+  @Override
+  public String toString() {
+    return firstname+" "+patronymic+" "+lastname;
   }
 
   @Override
@@ -119,12 +126,12 @@ public class Client extends User{
     this.email = email;
   }
 
-  public Order getOrder() {
-    return order;
+  public Long getOrder() {
+    return orderid;
   }
 
-  public void setOrder(Order order) {
-    this.order = order;
+  public void setOrder(Long orderid) {
+    this.orderid = orderid;
   }
 
   @Override

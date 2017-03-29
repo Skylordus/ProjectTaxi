@@ -16,7 +16,7 @@ public class AdminEntity {
   private String patronymic;
   @Temporal(TemporalType.DATE)
   private Date birthdate;
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
   @JoinColumn(name = "login",referencedColumnName = "login")
   private LoginEntity login;
 

@@ -1,12 +1,15 @@
 package com.yberdaliyev.services;
 
 import com.yberdaliyev.models.daos.IDriverDAO;
+import com.yberdaliyev.models.entities.CarEntity;
 import com.yberdaliyev.models.entities.DriverEntity;
 import com.yberdaliyev.models.entities.OrderEntity;
 import com.yberdaliyev.models.pojos.Car;
 import com.yberdaliyev.models.pojos.Driver;
 import com.yberdaliyev.models.pojos.Order;
+import com.yberdaliyev.models.repositories.CarRepository;
 import com.yberdaliyev.models.repositories.DriverRepository;
+import com.yberdaliyev.models.repositories.OrderRepository;
 import com.yberdaliyev.models.transformers.EntityToPojoTransformer;
 import com.yberdaliyev.models.transformers.PojoToEntityTransformer;
 import org.apache.log4j.Logger;
@@ -26,7 +29,8 @@ import java.util.Properties;
 public class DriverService implements IDriverService {
     private static Logger logger = Logger.getLogger(DriverService.class);
     private DriverRepository repository;
-
+    private OrderRepository orderRepository;
+    private CarRepository carRepository;
     private EntityToPojoTransformer entityToPojo;
     private PojoToEntityTransformer pojoToEntity;
 
@@ -36,6 +40,10 @@ public class DriverService implements IDriverService {
     public void setPojoToEntity(PojoToEntityTransformer pojoToEntity) {this.pojoToEntity = pojoToEntity;}
     @Autowired
     public void setRepository(DriverRepository repository) {this.repository = repository;}
+    @Autowired
+    public void setOrderRepository(OrderRepository orderRepository) {this.orderRepository = orderRepository;}
+    @Autowired
+    public void setCarRepository(CarRepository carRepository) {this.carRepository = carRepository;}
 
     public Driver getDriver(Long id) {
 
@@ -50,11 +58,11 @@ public class DriverService implements IDriverService {
                                  String lastname,
                                  String patronymic,
                                  Integer experience_years,
-                                 Car car,
+                                 Long car,
                                  Date birthdate,
                                  String login,
                                  String email,
-                                 Order order) {
+                                 Long order) {
         Driver driver = new Driver();
         driver.setId(id);
         driver.setFirstname(firstname);
@@ -75,24 +83,29 @@ public class DriverService implements IDriverService {
                              String lastname,
                              String patronymic,
                              Integer experience_years,
-                             Car car,
+                             Long car,
                              Date birthdate,
-                             String login,
-                             String email,
-                             Order order) {
+                             Long order) {
 
-        Driver driver = new Driver(id,
-                experience_years,
-                car,
-                firstname,
-                lastname,
-                patronymic,
-                birthdate,
-                login,
-                email,
-                order,
-                null);
-        repository.save(pojoToEntity.toDriverEntity(driver));
+        DriverEntity driverEntity = repository.findOne(id);
+        CarEntity carEntity = (car==null)?null:carRepository.findOne(car);
+
+        if (firstname!=null) {driverEntity.setFirstname(firstname);}
+        if (lastname!=null) {driverEntity.setLastname(lastname);}
+        if (patronymic!=null) {driverEntity.setPatronymic(patronymic);}
+        if (experience_years!=null) {driverEntity.setExperience_years(experience_years);}
+        if (carEntity!=null) {driverEntity.setCar(carEntity);}
+        if (birthdate!=null) {driverEntity.setBirthdate(birthdate);}
+
+        if (order!=null) {
+            logger.warn("ORDER before is:"+driverEntity.getOrder());
+            OrderEntity orderEntity = orderRepository.findOne(order);
+            driverEntity.setOrder(orderEntity);
+            orderEntity.setDriver(driverEntity);
+        }
+
+        logger.warn("ORDER ID is:"+driverEntity.getOrder().getId());
+        repository.save(driverEntity);
     }
 
     @Override

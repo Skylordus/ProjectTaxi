@@ -12,6 +12,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
 
     @Override
     public Admin toAdmin(AdminEntity adminEntity) {
+        if (adminEntity==null) return null;
         return new Admin(   adminEntity.getId(),
                 adminEntity.getFirstname(),
                 adminEntity.getLastname(),
@@ -24,7 +25,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
 
     @Override
     public Car toCar(CarEntity carEntity) {
-
+        if (carEntity==null) return null;
         return new Car( carEntity.getId(),
                 carEntity.getManufacturer(),
                 carEntity.getModel(),
@@ -35,6 +36,8 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
 
     @Override
     public Client toClient(ClientEntity clientEntity) {
+        if (clientEntity==null) return null;
+        OrderEntity order = clientEntity.getOrder();
 
         return new Client( clientEntity.getId(),
                 clientEntity.getFirstname(),
@@ -45,29 +48,13 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
                 clientEntity.getBirthdate(),
                 clientEntity.getLogin().getLogin(),
                 clientEntity.getLogin().getEmail(),
-                toOrder(clientEntity.getOrder()),
+                (order==null)?null:order.getId(),
                 clientEntity.getLogin().getPwd() );
     }
 
     @Override
-    public Driver toDriver(DriverEntity driverEntity) {
-
-        return new Driver( driverEntity.getId(),
-                driverEntity.getExperience_years(),
-                toCar(driverEntity.getCar()),
-                driverEntity.getFirstname(),
-                driverEntity.getLastname(),
-                driverEntity.getPatronymic(),
-                driverEntity.getBirthdate(),
-                driverEntity.getLogin().getLogin(),
-                driverEntity.getLogin().getEmail(),
-                toOrder(driverEntity.getOrder()),
-                driverEntity.getLogin().getPwd());
-    }
-
-    @Override
     public Order toOrder(OrderEntity orderEntity) {
-
+        if (orderEntity==null) return null;
         return new Order( orderEntity.getId(),
                 orderEntity.getFrom(),
                 orderEntity.getTo(),
@@ -79,7 +66,29 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
     }
 
     @Override
+    public Driver toDriver(DriverEntity driverEntity) {
+        if (driverEntity==null) return null;
+        Long car = driverEntity.getCar()==null?null:driverEntity.getCar().getId();
+        Long order = driverEntity.getOrder()==null?null:driverEntity.getOrder().getId();
+
+        return new Driver( driverEntity.getId(),
+                driverEntity.getExperience_years(),
+                car,
+                driverEntity.getFirstname(),
+                driverEntity.getLastname(),
+                driverEntity.getPatronymic(),
+                driverEntity.getBirthdate(),
+                driverEntity.getLogin().getLogin(),
+                driverEntity.getLogin().getEmail(),
+                order,
+                driverEntity.getLogin().getPwd());
+    }
+
+
+
+    @Override
     public MyUserDetails toUserDetails(LoginEntity loginEntity) {
+        if (loginEntity==null) return null;
         return new MyUserDetails(loginEntity.getLogin(),
                                  loginEntity.getPwd(),
                                  loginEntity.getRole(),

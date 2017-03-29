@@ -2,6 +2,7 @@ package com.yberdaliyev.services;
 
 import com.yberdaliyev.models.pojos.MyUserDetails;
 import com.yberdaliyev.models.pojos.User;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,7 @@ import java.util.List;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
     private IUserService userService;
-
+    Logger logger = Logger.getLogger(MyUserDetailsService.class);
     @Autowired
     public void setUserService(IUserService userService) {
         this.userService = userService;
@@ -29,12 +30,16 @@ public class MyUserDetailsService implements UserDetailsService {
         MyUserDetails userDetails = userService.getUserDetailsByLogin(username);
 
         if (userDetails==null) throw new UsernameNotFoundException(username);
-
+        logger.warn("found user =" + userDetails.getLogin());
         List<SimpleGrantedAuthority> authorityList = new LinkedList<>();
         authorityList.add(new SimpleGrantedAuthority(userDetails.getRole().toString()));
 
-        return new org.springframework.security.core.userdetails.User(username,userDetails.getPwd(),
-                userDetails.getEnabled(),true,
-                true,true, authorityList);
+        return new org.springframework.security.core.userdetails.User(userDetails.getLogin(),
+                userDetails.getPwd(),
+                userDetails.getEnabled(),
+                true,
+                true,
+                true,
+                authorityList);
     }
 }

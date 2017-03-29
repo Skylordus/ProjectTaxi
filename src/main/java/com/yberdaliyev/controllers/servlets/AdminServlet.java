@@ -173,11 +173,9 @@ public class AdminServlet {
                     form.getLastname(),
                     form.getPatronymic(),
                     form.getExperience_years(),
-                    car,
+                    car.getId(),
                     form.getBirthdate(),
-                    form.getLogin(),
-                    form.getEmail(),
-                    order);
+                    order.getId());
 
         } else
         if (type.equals("delete")) {
@@ -190,11 +188,11 @@ public class AdminServlet {
                                                         form.getLastname(),
                                                         form.getPatronymic(),
                                                         form.getExperience_years(),
-                                                        car,
+                                                        car.getId(),
                                                         form.getBirthdate(),
                                                         form.getLogin(),
                                                         form.getEmail(),
-                                                        order);
+                                                        order.getId());
             driver.setPwd(form.getPwd());
             driverService.insert(driver);
         }
