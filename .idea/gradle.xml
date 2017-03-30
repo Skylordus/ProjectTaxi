@@ -11,6 +11,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ProjectTaxi.BLO" />
+            <option value="$PROJECT_DIR$/ProjectTaxi.Commons" />
+            <option value="$PROJECT_DIR$/ProjectTaxi.DAO" />
+            <option value="$PROJECT_DIR$/ProjectTaxi.Web" />
             <option value="$PROJECT_DIR$/common" />
           </set>
         </option>

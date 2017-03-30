@@ -3,11 +3,21 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.BLO/ProjectTaxi.BLO.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.BLO/ProjectTaxi.BLO.iml" group="ProjectTaxi.BLO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.BLO/ProjectTaxi.BLO_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.BLO/ProjectTaxi.BLO_main.iml" group="ProjectTaxi.BLO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.BLO/ProjectTaxi.BLO_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.BLO/ProjectTaxi.BLO_test.iml" group="ProjectTaxi.BLO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.Commons/ProjectTaxi.Commons.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.Commons/ProjectTaxi.Commons.iml" group="ProjectTaxi.Commons" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.Commons/ProjectTaxi.Commons_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.Commons/ProjectTaxi.Commons_main.iml" group="ProjectTaxi.Commons" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.Commons/ProjectTaxi.Commons_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.Commons/ProjectTaxi.Commons_test.iml" group="ProjectTaxi.Commons" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.DAO/ProjectTaxi.DAO.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.DAO/ProjectTaxi.DAO.iml" group="ProjectTaxi.DAO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.DAO/ProjectTaxi.DAO_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.DAO/ProjectTaxi.DAO_main.iml" group="ProjectTaxi.DAO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.DAO/ProjectTaxi.DAO_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.DAO/ProjectTaxi.DAO_test.iml" group="ProjectTaxi.DAO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.Web/ProjectTaxi.Web.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.Web/ProjectTaxi.Web.iml" group="ProjectTaxi.Web" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.Web/ProjectTaxi.Web_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.Web/ProjectTaxi.Web_main.iml" group="ProjectTaxi.Web" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi.Web/ProjectTaxi.Web_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi.Web/ProjectTaxi.Web_test.iml" group="ProjectTaxi.Web" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi_main.iml" group="ProjectTaxi" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProjectTaxi_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ProjectTaxi_test.iml" group="ProjectTaxi" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/common.iml" group="common" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/common_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/common_main.iml" group="common" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/common_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/common_test.iml" group="common" />
     </modules>
   </component>
 </project>

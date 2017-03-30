@@ -4,6 +4,14 @@
     <bytecodeTargetLevel>
       <module name="common_main" target="1.5" />
       <module name="common_test" target="1.5" />
+      <module name="ProjectTaxi.BLO_main" target="1.8" />
+      <module name="ProjectTaxi.BLO_test" target="1.8" />
+      <module name="ProjectTaxi.Commons_main" target="1.8" />
+      <module name="ProjectTaxi.Commons_test" target="1.8" />
+      <module name="ProjectTaxi.DAO_main" target="1.8" />
+      <module name="ProjectTaxi.DAO_test" target="1.8" />
+      <module name="ProjectTaxi.Web_main" target="1.8" />
+      <module name="ProjectTaxi.Web_test" target="1.8" />
       <module name="ProjectTaxi_main" target="1.8" />
       <module name="ProjectTaxi_test" target="1.8" />
     </bytecodeTargetLevel>
