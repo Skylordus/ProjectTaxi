@@ -134,4 +134,8 @@ public class UserService implements IUserService {
         }
         return false;
     }
+
+    public long rmiWorking() {
+        return 199L;
+    }
 }

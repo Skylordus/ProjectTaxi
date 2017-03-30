@@ -2,7 +2,9 @@ package com.yberdaliyev.models.pojos;
 
 import com.yberdaliyev.models.enums.USER_ROLES;
 
-public class MyUserDetails {
+import java.io.Serializable;
+
+public class MyUserDetails implements Serializable {
   private String login;
   private String pwd;
   private USER_ROLES role;

@@ -24,4 +24,5 @@ public interface IUserService {
     User getUserByLoginAndRole(String login, USER_ROLES role);
     MyUserDetails getUserDetailsByLogin(String login);
     boolean validateSpecialPassword(String pwd, USER_ROLES role);
+
 }

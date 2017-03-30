@@ -1,2 +1,3 @@
 rootProject.name = 'ProjectTaxi'
+include 'common'
 
