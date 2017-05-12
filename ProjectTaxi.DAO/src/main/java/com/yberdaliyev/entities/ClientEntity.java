@@ -22,18 +22,18 @@ public class ClientEntity {
   @JoinColumn(name = "login",referencedColumnName = "login")
   private LoginEntity login;
 
-
-
-  @OneToOne(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  //@OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
   //@JoinColumn(name = "\"order\"",referencedColumnName = "id")
-  private OrderEntity order;
+  //private OrderEntity order;
+  @Column(name="\"order\"")
+  private Long order;
 
   @Version
   private Long version;
 
   public ClientEntity() {}
 
-  public ClientEntity(String firstname, String lastname, String patronymic, Date date_registered, Integer orders_amount, Date birthdate, LoginEntity login,  OrderEntity order) {
+  public ClientEntity(String firstname, String lastname, String patronymic, Date date_registered, Integer orders_amount, Date birthdate, LoginEntity login,  Long order) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.patronymic = patronymic;
@@ -41,7 +41,6 @@ public class ClientEntity {
     this.orders_amount = orders_amount;
     this.birthdate = birthdate;
     this.login = login;
-
     this.order = order;
   }
 
@@ -111,11 +110,11 @@ public class ClientEntity {
 
 
 
-  public OrderEntity getOrder() {
+  public Long getOrder() {
     return order;
   }
 
-  public void setOrder(OrderEntity order) {
+  public void setOrder(Long order) {
     this.order = order;
   }
 }

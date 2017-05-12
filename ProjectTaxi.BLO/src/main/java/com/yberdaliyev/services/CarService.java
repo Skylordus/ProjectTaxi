@@ -8,6 +8,7 @@ import com.yberdaliyev.transformers.EntityToPojoTransformer;
 import com.yberdaliyev.transformers.PojoToEntityTransformer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +29,13 @@ public class CarService implements ICarService {
     public void setEntityToPojo(EntityToPojoTransformer entityToPojo) {this.entityToPojo = entityToPojo;}
     @Autowired
     public void setPojoToEntity(PojoToEntityTransformer pojoToEntity) {this.pojoToEntity = pojoToEntity;}
+
     @Autowired
-    public CarService(CarRepository repository) {
-        this.repository = repository;
-    }
+    //@Qualifier("myCarRepo")
+    public void setRepository(CarRepository repository) {this.repository = repository;}
+
+
+
 
     @Override
     public Car getCar(Long id) {

@@ -36,7 +36,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
     @Override
     public Client toClient(ClientEntity clientEntity) {
         if (clientEntity==null) return null;
-        OrderEntity order = clientEntity.getOrder();
+        Long order = clientEntity.getOrder();
 
         return new Client( clientEntity.getId(),
                 clientEntity.getFirstname(),
@@ -47,7 +47,7 @@ public class EntityToPojoTransformerImpl implements EntityToPojoTransformer {
                 clientEntity.getBirthdate(),
                 clientEntity.getLogin().getLogin(),
                 clientEntity.getLogin().getEmail(),
-                (order==null)?null:order.getId(),
+                (order==null)?null:order,
                 clientEntity.getLogin().getPwd() );
     }
 

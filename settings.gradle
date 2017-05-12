@@ -1,5 +1,5 @@
 rootProject.name = 'ProjectTaxi'
-include 'common'
+
 include 'ProjectTaxi.Commons'
 include 'ProjectTaxi.BLO'
 include 'ProjectTaxi.DAO'

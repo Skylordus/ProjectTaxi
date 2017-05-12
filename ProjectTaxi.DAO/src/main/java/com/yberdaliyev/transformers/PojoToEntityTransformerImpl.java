@@ -79,7 +79,7 @@ public class PojoToEntityTransformerImpl implements PojoToEntityTransformer {
                 client.getOrders_amount(),
                 client.getBirthdate(),
                 login,
-                new OrderEntity(client.getOrder()));
+                client.getOrder());
         logger.warn("finished toClientEntity "+this.hashCode());
         return clientEntity;
     }

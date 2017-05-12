@@ -3,12 +3,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"
-       >
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+>
 
     <context:annotation-config/>
     <context:component-scan base-package="com.yberdaliyev"/>
+
 
     <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"
           name="passwordEncoder"/>
@@ -25,4 +27,33 @@
     <bean class="org.springframework.security.remoting.rmi.ContextPropagatingRemoteInvocationFactory">
     </bean>
 
+
+    <!--SPRING DATA JPA-->
+    <jpa:repositories base-package="com.yberdaliyev.repositories"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <!-- This makes /META-INF/persistence.xml is no longer necessary -->
+        <property name="packagesToScan" value="com.yberdaliyev.entities" />
+        <!-- JpaVendorAdapter implementation for Hibernate EntityManager.
+             Exposes Hibernate's persistence provider and EntityManager extension interface -->
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">validate</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL95Dialect</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://localhost:5432/HomeWork2" />
+        <property name="username" value="postgres" />
+        <property name="password" value="postgres" />
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
 </beans>

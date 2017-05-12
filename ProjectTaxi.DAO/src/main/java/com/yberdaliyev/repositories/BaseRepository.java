@@ -12,7 +12,6 @@ import java.util.List;
  * Created by Yerlan on 21.03.2017.
  */
 @NoRepositoryBean
-
 public interface BaseRepository<T,ID extends Serializable> extends Repository<T,ID> {
     @Transactional
     void delete(T deleted);

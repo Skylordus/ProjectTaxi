@@ -139,7 +139,7 @@ public class ClientService implements IClientService {
          ClientEntity clientEntity = repository.findOne(client_id);
          OrderEntity orderEntity = new OrderEntity();
          orderEntity.setId(order_id);
-         clientEntity.setOrder(orderEntity);
+         clientEntity.setOrder(order_id);
 
         try {
             repository.save(clientEntity);
